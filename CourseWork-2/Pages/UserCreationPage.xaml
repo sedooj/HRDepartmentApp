@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CourseWork_2.Pages.UserCreationPage"
+             Title="Создать пользователя">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+
+            <Entry
+                x:Name="NameEntry"
+                Placeholder="Имя"
+                HorizontalOptions="Fill" />
+
+            <Entry
+                x:Name="AgeEntry"
+                Placeholder="Возраст"
+                Keyboard="Numeric"
+                HorizontalOptions="Fill"
+                TextChanged="OnAgeEntryTextChanged" />
+
+            <Label
+                x:Name="AgeErrorLabel"
+                TextColor="Red"
+                Text = "Возраст должен быть числом и больше нуля"
+                IsVisible="False"
+                HorizontalOptions="Fill" />
+
+            <Entry
+                x:Name="EmailEntry"
+                Placeholder="Почта"
+                Keyboard="Email"
+                HorizontalOptions="Fill" />
+
+            <Button
+                Text="Создать"
+                Clicked="OnCreateUserClicked"
+                HorizontalOptions="Fill" />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
