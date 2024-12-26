@@ -1,3 +1,6 @@
+using CourseWork_2.Util;
+using Microsoft.Maui.Controls;
+
 namespace CourseWork_2.ViewControllers;
 
 public class PassportController
@@ -5,23 +8,63 @@ public class PassportController
     private const int MaxSerialLength = 4;
     private const int MaxNumberLength = 6;
 
-    public (bool, bool) ValidateSerial(string serial)
+    public bool ValidateSerial(Entry entry)
     {
-        if (!Validator.ValidateInt(serial, out _)) return (false, true);
-        var result = serial.Length == MaxSerialLength ? (true, false) : (false, true);
-        return result;
+        bool isValid = Validator.ValidateInt(entry.Text, out _) && entry.Text.Length == MaxSerialLength;
+        EntryUtil.ChangeEntryColor(entry, isValid);
+        return isValid;
     }
 
-    public (bool, bool) ValidateNumber(string number)
+    public bool ValidateNumber(Entry entry)
     {
-        if (!Validator.ValidateInt(number, out _)) return (false, true);
-        var result = number.Length == MaxNumberLength ? (true, false) : (false, true);
-        return result;
+        bool isValid = Validator.ValidateInt(entry.Text, out _) && entry.Text.Length == MaxNumberLength;
+        EntryUtil.ChangeEntryColor(entry, isValid);
+        return isValid;
+    }
+
+    public bool ValidateDateOfIssue(DatePicker dateOfIssueEntry)
+    {
+        return dateOfIssueEntry.Date <= DateTime.Now;
+    }
+
+    public bool ValidateWhoIssued(Entry entry)
+    {
+        bool isValid = !string.IsNullOrWhiteSpace(entry.Text);
+        EntryUtil.ChangeEntryColor(entry, !isValid);
+        return isValid;
     }
 
     public async Task<bool> ValidateInputs(Entry serialEntry, Entry numberEntry, DatePicker dateOfIssueEntry, Entry whoIssuedEntry)
     {
-        // Implement validation logic for other fields if needed
+        if (!ValidateSerial(serialEntry))
+        {
+            await DisplayAlert("Ошибка валидации", "Серия должна быть 4-значным числом.", "OK");
+            return false;
+        }
+
+        if (!ValidateNumber(numberEntry))
+        {
+            await DisplayAlert("Ошибка валидации", "Номер должен быть 6-значным числом.", "OK");
+            return false;
+        }
+
+        if (!ValidateDateOfIssue(dateOfIssueEntry))
+        {
+            await DisplayAlert("Ошибка валидации", "Дата выдачи не может быть в будущем.", "OK");
+            return false;
+        }
+
+        if (!ValidateWhoIssued(whoIssuedEntry))
+        {
+            await DisplayAlert("Ошибкаа валидации", "Поле 'Кем выдан' обязательно.", "OK");
+            return false;
+        }
+
         return true;
+    }
+
+    private Task DisplayAlert(string title, string message, string cancel)
+    {
+        return Application.Current.MainPage.DisplayAlert(title, message, cancel);
     }
 }

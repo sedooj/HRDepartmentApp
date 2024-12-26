@@ -19,14 +19,14 @@ public partial class PassportPage
 
     private void OnSerialEntryTextChanged(object sender, TextChangedEventArgs e)
     {
-        bool needToChangeColor = _controller.ValidateSerial(e.NewTextValue).Item2;
-        EntryUtil.ChangeEntryColor(SerialEntry, !needToChangeColor);
+        bool needToChangeColor = _controller.ValidateSerial(SerialEntry);
+        EntryUtil.ChangeEntryColor(SerialEntry, needToChangeColor);
     }
 
     private void OnNumberEntryTextChanged(object sender, TextChangedEventArgs e)
     {
-        bool needToChangeColor = _controller.ValidateNumber(e.NewTextValue).Item2;
-        EntryUtil.ChangeEntryColor(NumberEntry, !needToChangeColor);
+        bool needToChangeColor = _controller.ValidateNumber(NumberEntry);
+        EntryUtil.ChangeEntryColor(NumberEntry, needToChangeColor);
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
