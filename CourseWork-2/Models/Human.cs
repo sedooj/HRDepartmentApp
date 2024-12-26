@@ -1,10 +1,9 @@
-using CourseWork_2.Models;
 using CourseWork.entity;
 using CourseWork.entity.employmentHistory;
 
-namespace CourseWork_2.entity;
+namespace CourseWork_2.Models;
 
-public abstract class Human
+public class Human
 {
     private Passport _passport;
     private UserDefaultCredentials _userDefaultCredentials;

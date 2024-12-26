@@ -1,26 +1,52 @@
-namespace CourseWork_2
+using CourseWork_2.Models;
+using CourseWork_2.ViewControllers;
+
+namespace CourseWork_2;
+
+public static class Validator
 {
-    public static class Validator
+    public static bool ValidateHuman(HumanDataHolder human)
     {
-        public static bool RequireNotEmpty(string input)
-        {
-            return !string.IsNullOrWhiteSpace(input);
-        }
+        return ValidateName(human.UserDefaultCredentials.FirstName) &&
+               ValidateName(human.UserDefaultCredentials.LastName) &&
+               ValidateName(human.UserDefaultCredentials.SecondName) &&
+               RequireDateIsNotGreaterThanNow(human.UserDefaultCredentials.DateOfBirth) &&
+               ValidateHomeAddress(human.UserDefaultCredentials.HomeAddress) &&
+               ValidatePhoneNumber(human.UserDefaultCredentials.PhoneNumber) &&
+               ValidatePassport(human.Passport);
+    }
 
-        public static bool RequireGreaterThan(int value, int threshold)
-        {
-            return value > threshold;
-        }
+    public static bool ValidateName(string name)
+    {
+        return !string.IsNullOrWhiteSpace(name);
+    }
 
-        public static bool ValidateInt(string input, out int result)
-        {
-            if (!int.TryParse(input, out result)) return false;
-            return result >= 0;
-        }
+    public static bool RequireDateIsNotGreaterThanNow(DateTime? dateOfBirth)
+    {
+        return dateOfBirth.HasValue && dateOfBirth.Value <= DateTime.Now;
+    }
 
-        public static bool ValidateDate(string input)
-        {
-            return DateTime.TryParse(input, out _);
-        }
+    public static bool ValidateHomeAddress(string homeAddress)
+    {
+        return !string.IsNullOrWhiteSpace(homeAddress);
+    }
+
+    public static bool ValidatePhoneNumber(string phoneNumber)
+    {
+        return !string.IsNullOrWhiteSpace(phoneNumber) && phoneNumber.All(char.IsDigit);
+    }
+
+    public static bool ValidatePassport(Passport? passport)
+    {
+        return passport != null &&
+               ValidateInt(passport.Serial, out _) && passport.Serial.Length == 4 &&
+               ValidateInt(passport.Number, out _) && passport.Number.Length == 6 &&
+               RequireDateIsNotGreaterThanNow(passport.DateOfIssue) &&
+               !string.IsNullOrWhiteSpace(passport.WhoIssued);
+    }
+
+    public static bool ValidateInt(string value, out int result)
+    {
+        return int.TryParse(value, out result);
     }
 }

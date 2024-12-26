@@ -1,3 +1,6 @@
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Graphics;
+
 namespace CourseWork_2.Util;
 
 public static class EntryUtil

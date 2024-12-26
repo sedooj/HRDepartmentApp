@@ -2,10 +2,10 @@ public sealed class Passport
 {
     private string _serial;
     private string _number;
-    private string _dateOfIssue;
+    private DateTime _dateOfIssue;
     private string _whoIssued;
 
-    public Passport(string serial, string number, string dateOfIssue, string whoIssued)
+    public Passport(string serial, string number, DateTime dateOfIssue, string whoIssued)
     {
         _serial = serial;
         _number = number;
@@ -25,7 +25,7 @@ public sealed class Passport
         set { _number = value; }
     }
 
-    public string DateOfIssue
+    public DateTime DateOfIssue
     {
         get { return _dateOfIssue; }
         set { _dateOfIssue = value; }

@@ -1,61 +1,40 @@
-using CourseWork_2.entity;
-using CourseWork_2.Models;
-using CourseWork_2.Pages.userCreation;
-using Microsoft.Maui.Controls;
-using CourseWork.entity;
-using CourseWork.entity.employmentHistory;
-using Microsoft.Maui.Graphics;
+using CourseWork_2.ViewControllers;
 
 namespace CourseWork_2.Pages;
 
-public partial class UserCreationPage : ContentPage
+public partial class UserCreationPage
 {
-    private Passport _passport;
-    private UserDefaultCredentials _userDefaultCredentials;
-    private List<EmploymentHistoryRecord> _employmentHistoryRecords;
-    private Education _education;
-    private EducationDocument _educationDocument;
+    private readonly UserCreationViewController _controller = new();
 
     public UserCreationPage()
     {
         InitializeComponent();
-        MessagingCenter.Subscribe<UserDefaultCredentialsPage, UserDefaultCredentials>(this, "UserDefaultCredentialsSaved", (sender, userDefaultCredentials) =>
+    }
+
+    private async void OnCreateUserClicked(object sender, EventArgs e)
+    {
+        if (await _controller.CreateHuman())
         {
-            _userDefaultCredentials = userDefaultCredentials;
-        });
-        // Subscribe to other pages similarly
+            await Navigation.PopAsync();
+        }
     }
 
-    private async void OnPassportButtonClicked(object sender, EventArgs e)
+    private void OnPassportButtonClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new PassportPage());
+        var passportPage = new PassportPage(_controller.HumanData, _controller);
+        Navigation.PushAsync(passportPage);
     }
 
-    private async void OnUserDefaultCredentialsButtonClicked(object sender, EventArgs e)
+    private void OnUserDefaultCredentialsButtonClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new UserDefaultCredentialsPage());
+        var userDefaultCredentialsPage = new UserDefaultCredentialsPage(_controller.HumanData, _controller);
+        Navigation.PushAsync(userDefaultCredentialsPage);
+    }
+
+    private void OnEducationDocumentButtonClicked(object sender, EventArgs e)
+    {
+        var educationDocumentPage = new EducationDocumentPage(_controller.HumanData, _controller);
+        Navigation.PushAsync(educationDocumentPage);
     }
     
-    private async void OnEducationDocumentButtonClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new EducationDocumentPage());
-    }
-
-    private void OnCreateUserClicked(object? sender, EventArgs e)
-    {
-        // var newUser = new Human(_passport, _userDefaultCredentials, _employmentHistoryRecords, _education, _educationDocument);
-        // Your user creation logic here
-    }
-
-    // private void OnAgeEntryTextChanged(object sender, TextChangedEventArgs e)
-    // {
-    //     if (!int.TryParse(e.NewTextValue, out var inputAge) || inputAge <= 0 || inputAge > 125)
-    //     {
-    //         AgeEntry.TextColor = Colors.Red;
-    //     }
-    //     else
-    //     {
-    //         AgeEntry.TextColor = Colors.White;
-    //     }
-    // }
 }

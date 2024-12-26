@@ -1,17 +1,24 @@
-using CourseWork_2.Models;
 using CourseWork_2.Util;
 using CourseWork_2.ViewControllers;
 using Microsoft.Maui.Controls;
 
-namespace CourseWork_2.Pages.userCreation;
+namespace CourseWork_2.Pages;
 
 public partial class PassportPage
 {
     private readonly PassportController _controller = new();
+    private readonly UserCreationViewController _userCreationController;
 
-    public PassportPage()
+    public PassportPage(HumanDataHolder humanData, UserCreationViewController userCreationController)
     {
         InitializeComponent();
+        _userCreationController = userCreationController;
+
+        var passport = humanData.Passport;
+        SerialEntry.Text = passport.Serial;
+        NumberEntry.Text = passport.Number;
+        DateOfIssueDatePicker.Date = passport.DateOfIssue;
+        WhoIssuedEntry.Text = passport.WhoIssued;
 
         SerialEntry.TextChanged += OnSerialEntryTextChanged;
         NumberEntry.TextChanged += OnNumberEntryTextChanged;
@@ -39,10 +46,11 @@ public partial class PassportPage
         var passport = new Passport(
             SerialEntry.Text,
             NumberEntry.Text,
-            DateOfIssueDatePicker.Date.ToString("yyyy-MM-dd"),
+            DateOfIssueDatePicker.Date,
             WhoIssuedEntry.Text
         );
-        // MessagingCenter.Send(this, "PassportSaved", passport);
+
+        _userCreationController.UpdatePassport(passport);
         await Navigation.PopAsync();
     }
 }
