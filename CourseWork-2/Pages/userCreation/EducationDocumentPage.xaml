@@ -1,9 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CourseWork_2.Pages.userCreation.EducationDocumentPage">
-    <ContentPage.Content>
-        
-    </ContentPage.Content>
+             x:Class="CourseWork_2.Pages.userCreation.EducationDocumentPage"
+             Title="Документ об образовании">
+
+    <VerticalStackLayout Padding="30,10" Spacing="25">
+        <Entry x:Name="SerialEntry" Placeholder="Серия" HorizontalOptions="Fill" />
+        <Label Text="Уровень образования" HorizontalOptions="Fill" />
+        <Picker x:Name="LevelPicker" HorizontalOptions="Fill" />
+        <Entry x:Name="InstitutionEntry" Placeholder="Учреждение" HorizontalOptions="Fill" />
+        <Label Text="Дата выпуска" HorizontalOptions="Fill" />
+        <DatePicker x:Name="GraduatedDatePicker" HorizontalOptions="Fill" />
+        <Entry x:Name="SpecialtyEntry" Placeholder="Специальность" HorizontalOptions="Fill" />
+        <Entry x:Name="DirectionEntry" Placeholder="Направление" HorizontalOptions="Fill" />
+        <Entry x:Name="DateOfIssueEntry" Placeholder="Дата выдачи" HorizontalOptions="Fill" />
+        <Button Text="Сохранить" Clicked="OnSaveClicked" HorizontalOptions="Fill" />
+    </VerticalStackLayout>
 </ContentPage>

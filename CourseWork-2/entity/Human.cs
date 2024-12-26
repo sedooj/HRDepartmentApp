@@ -1,3 +1,4 @@
+using CourseWork_2.entity;
 using CourseWork.entity.employmentHistory;
 
 namespace CourseWork.entity;

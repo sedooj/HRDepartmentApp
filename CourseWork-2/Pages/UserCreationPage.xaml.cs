@@ -1,3 +1,4 @@
+using CourseWork_2.entity;
 using CourseWork_2.Pages.userCreation;
 using Microsoft.Maui.Controls;
 using CourseWork.entity;

@@ -1,4 +1,6 @@
-namespace CourseWork.entity;
+using CourseWork.entity;
+
+namespace CourseWork_2.entity;
 
 public sealed class EducationDocument : Education
 {

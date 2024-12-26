@@ -10,8 +10,8 @@
             <Button Text="Заполнить персональные данные" Clicked="OnUserDefaultCredentialsButtonClicked" HorizontalOptions="Fill" />
             <Button Text="Enter Employment History Records" Clicked="OnEmploymentHistoryRecordsButtonClicked" HorizontalOptions="Fill" />
             <Button Text="Enter Education" Clicked="OnEducationButtonClicked" HorizontalOptions="Fill" />
-            <Button Text="Enter Education Document" Clicked="OnEducationDocumentButtonClicked" HorizontalOptions="Fill" />
-            <Button Text="Create User" Clicked="OnCreateUserClicked" HorizontalOptions="Fill" />
+            <Button Text="Заполнить документ об образовании" Clicked="OnEducationDocumentButtonClicked" HorizontalOptions="Fill" />
+            <Button Text="Создать" Clicked="OnCreateUserClicked" HorizontalOptions="Fill" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
