@@ -5,18 +5,18 @@ namespace CourseWork.entity
         private string _firstName;
         private string _lastName;
         private string _secondName;
-        private int _age;
+        private DateTime _dateOfBirth;
         private string _homeAddress;
         private string _phoneNumber;
         private string _userPhotoUrl;
 
-        public UserDefaultCredentials(string firstName, string lastName, string secondName, int age, string homeAddress,
+        public UserDefaultCredentials(string firstName, string lastName, string secondName, DateTime dateOfBirth, string homeAddress,
             string phoneNumber, string userPhotoUrl)
         {
             _firstName = firstName;
             _lastName = lastName;
             _secondName = secondName;
-            _age = age;
+            _dateOfBirth = dateOfBirth;
             _homeAddress = homeAddress;
             _phoneNumber = phoneNumber;
             _userPhotoUrl = userPhotoUrl;
@@ -36,10 +36,10 @@ namespace CourseWork.entity
 
         public string SecondName => _secondName;
 
-        public int Age
+        public DateTime DateOfBirth
         {
-            get => _age;
-            set => _age = value;
+            get => _dateOfBirth;
+            set => _dateOfBirth = value;
         }
 
         public string HomeAddress
