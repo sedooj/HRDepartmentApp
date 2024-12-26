@@ -4,16 +4,39 @@
              x:Class="CourseWork_2.Pages.userCreation.EducationDocumentPage"
              Title="Документ об образовании">
 
-    <VerticalStackLayout Padding="30,10" Spacing="25">
-        <Entry x:Name="SerialEntry" Placeholder="Серия" HorizontalOptions="Fill" />
-        <Label Text="Уровень образования" HorizontalOptions="Fill" />
-        <Picker x:Name="LevelPicker" HorizontalOptions="Fill" />
-        <Entry x:Name="InstitutionEntry" Placeholder="Учреждение" HorizontalOptions="Fill" />
-        <Label Text="Дата выпуска" HorizontalOptions="Fill" />
-        <DatePicker x:Name="GraduatedDatePicker" HorizontalOptions="Fill" />
-        <Entry x:Name="SpecialtyEntry" Placeholder="Специальность" HorizontalOptions="Fill" />
-        <Entry x:Name="DirectionEntry" Placeholder="Направление" HorizontalOptions="Fill" />
-        <Entry x:Name="DateOfIssueEntry" Placeholder="Дата выдачи" HorizontalOptions="Fill" />
-        <Button Text="Сохранить" Clicked="OnSaveClicked" HorizontalOptions="Fill" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="30,10" Spacing="25">
+            <HorizontalStackLayout HorizontalOptions="FillAndExpand">
+                <VerticalStackLayout HorizontalOptions="Start">
+                    <Label Text="Серия" HorizontalOptions="FillAndExpand" />
+                    <Entry x:Name="SerialEntry" Placeholder="Введите серию" HorizontalOptions="FillAndExpand" />
+                </VerticalStackLayout>
+                <BoxView HorizontalOptions="FillAndExpand" />
+                <VerticalStackLayout HorizontalOptions="End">
+                    <Label Text="Номер" HorizontalOptions="FillAndExpand" />
+                    <Entry x:Name="NumberEntry" Placeholder="Введите номер" HorizontalOptions="FillAndExpand" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+
+            <Label Text="Уровень образования" HorizontalOptions="FillAndExpand" />
+            <Picker x:Name="LevelPicker" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Учреждение" HorizontalOptions="FillAndExpand" />
+            <Entry x:Name="InstitutionEntry" Placeholder="Введите учреждение" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Дата выпуска" HorizontalOptions="FillAndExpand" />
+            <DatePicker x:Name="GraduatedDatePicker" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Специальность" HorizontalOptions="FillAndExpand" />
+            <Entry x:Name="SpecialtyEntry" Placeholder="Введите специальность" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Направление" HorizontalOptions="FillAndExpand" />
+            <Entry x:Name="DirectionEntry" Placeholder="Введите направление" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Дата выдачи" HorizontalOptions="FillAndExpand" />
+            <DatePicker x:Name="DateOfIssueDatePicker" HorizontalOptions="FillAndExpand" />
+
+            <Button Text="Сохранить" Clicked="OnSaveClicked" HorizontalOptions="FillAndExpand" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
