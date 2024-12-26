@@ -5,9 +5,24 @@
              Title="Паспортные данные">
 
     <VerticalStackLayout Padding="30,10" Spacing="25">
-        <Entry x:Name="SerialEntry" Placeholder="Серия" HorizontalOptions="Fill" />
-        <Entry x:Name="DateOfIssueEntry" Placeholder="Дата выдачи" HorizontalOptions="Fill" />
-        <Entry x:Name="WhoIssuedEntry" Placeholder="Кем выдан" HorizontalOptions="Fill" />
-        <Button Text="Сохранить" Clicked="OnSaveClicked" HorizontalOptions="Fill" />
+        <HorizontalStackLayout HorizontalOptions="FillAndExpand">
+            <VerticalStackLayout HorizontalOptions="Start">
+                <Label Text="Серия" HorizontalOptions="FillAndExpand" />
+                <Entry x:Name="SerialEntry" Placeholder="Введите серию" HorizontalOptions="FillAndExpand" />
+            </VerticalStackLayout>
+            <BoxView HorizontalOptions="FillAndExpand" />
+            <VerticalStackLayout HorizontalOptions="End">
+                <Label Text="Номер" HorizontalOptions="FillAndExpand" />
+                <Entry x:Name="NumberEntry" Placeholder="Введите номер" HorizontalOptions="FillAndExpand" />
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+
+        <Label Text="Дата выдачи" HorizontalOptions="FillAndExpand" />
+        <DatePicker x:Name="DateOfIssueDatePicker" HorizontalOptions="FillAndExpand" />
+
+        <Label Text="Кем выдан" HorizontalOptions="FillAndExpand" />
+        <Entry x:Name="WhoIssuedEntry" Placeholder="Введите кем выдан" HorizontalOptions="FillAndExpand" />
+
+        <Button Text="Сохранить" Clicked="OnSaveClicked" HorizontalOptions="FillAndExpand" />
     </VerticalStackLayout>
 </ContentPage>

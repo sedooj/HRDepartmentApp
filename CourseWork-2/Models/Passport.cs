@@ -1,16 +1,39 @@
-namespace CourseWork.entity;
-
 public sealed class Passport
 {
-    public string Serial { get; }
-    public string DateOfIssue { get; }
-    public string WhoIssued { get; }
+    private string _serial;
+    private string _number;
+    private string _dateOfIssue;
+    private string _whoIssued;
 
-    public Passport(string serial, string dateOfIssue, string whoIssued)
+    public Passport(string serial, string number, string dateOfIssue, string whoIssued)
     {
-        Serial = serial;
-        DateOfIssue = dateOfIssue;
-        WhoIssued = whoIssued;
+        _serial = serial;
+        _number = number;
+        _dateOfIssue = dateOfIssue;
+        _whoIssued = whoIssued;
     }
-    
+
+    public string Serial
+    {
+        get { return _serial; }
+        set { _serial = value; }
+    }
+
+    public string Number
+    {
+        get { return _number; }
+        set { _number = value; }
+    }
+
+    public string DateOfIssue
+    {
+        get { return _dateOfIssue; }
+        set { _dateOfIssue = value; }
+    }
+
+    public string WhoIssued
+    {
+        get { return _whoIssued; }
+        set { _whoIssued = value; }
+    }
 }
