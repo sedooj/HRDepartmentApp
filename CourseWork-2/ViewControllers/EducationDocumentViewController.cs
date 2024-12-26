@@ -1,4 +1,5 @@
 using CourseWork_2.Models;
+using Microsoft.Maui.Controls;
 
 namespace CourseWork_2.ViewControllers;
 
@@ -35,14 +36,14 @@ public class EducationDocumentController
         return (true, false);
     }
 
-    public bool ValidateDateOfIssue(string dateOfIssue)
+    public bool ValidateDateOfIssue(DateTime dateOfIssue)
     {
-        return Validator.ValidateDate(dateOfIssue);
+        return Validator.RequireDateIsNotGreaterThanNow(dateOfIssue);
     }
 
     public bool ValidateRequiredFields(params string[] fields)
     {
-        return fields.All(Validator.RequireNotEmpty);
+        return fields.All(Validator.ValidateName);
     }
 
     public async Task<bool> ValidateInputs(Picker levelPicker, Entry institutionEntry, Entry specialtyEntry,
@@ -64,7 +65,7 @@ public class EducationDocumentController
 
         bool isSerialValid = ValidateSerial(serialEntry.Text).Item1;
         bool isNumberValid = ValidateNumber(numberEntry.Text).Item1;
-        bool isDateOfIssueValid = ValidateDateOfIssue(dateOfIssueDatePicker.Date.ToString("yyyy-MM-dd"));
+        bool isDateOfIssueValid = ValidateDateOfIssue(dateOfIssueDatePicker.Date);
 
         if (!isSerialValid || !isNumberValid || !isDateOfIssueValid)
         {

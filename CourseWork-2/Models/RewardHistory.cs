@@ -1,4 +1,6 @@
-namespace CourseWork.entity.employmentHistory;
+using CourseWork_2.Models.employmentHistory;
+
+namespace CourseWork_2.Models;
 
 public class RewardHistory
 {

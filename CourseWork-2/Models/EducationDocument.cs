@@ -8,9 +8,9 @@ public sealed class EducationDocument : Education
     private string _number;
     private EducationLevels _level;
     private string _direction;
-    private string _dateOfIssue;
+    private DateTime _dateOfIssue;
 
-    public EducationDocument(long documentId, string institution, string graduatedDate, string specialty, string serial, string number, EducationLevels level, string direction, string dateOfIssue)
+    public EducationDocument(long documentId, string institution, DateTime graduatedDate, string specialty, string serial, string number, EducationLevels level, string direction, DateTime dateOfIssue)
         : base(documentId, institution, graduatedDate, specialty)
     {
         _serial = serial;
@@ -44,7 +44,7 @@ public sealed class EducationDocument : Education
         set { _direction = value; }
     }
 
-    public string DateOfIssue
+    public DateTime DateOfIssue
     {
         get { return _dateOfIssue; }
         set { _dateOfIssue = value; }

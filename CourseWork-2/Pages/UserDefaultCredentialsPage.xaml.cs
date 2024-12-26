@@ -1,15 +1,26 @@
+using CourseWork_2.Models;
 using CourseWork_2.ViewControllers;
-using CourseWork.entity;
+using Microsoft.Maui.Controls;
 
-namespace CourseWork_2.Pages.userCreation;
+namespace CourseWork_2.Pages;
 
 public partial class UserDefaultCredentialsPage
 {
     private readonly UserDefaultCredentialsController _controller = new();
+    private readonly UserCreationViewController _userCreationController;
 
-    public UserDefaultCredentialsPage()
+    public UserDefaultCredentialsPage(HumanDataHolder humanData, UserCreationViewController userCreationController)
     {
         InitializeComponent();
+        _userCreationController = userCreationController;
+
+        var credentials = humanData.UserDefaultCredentials;
+        FirstNameEntry.Text = credentials.FirstName;
+        LastNameEntry.Text = credentials.LastName;
+        SecondNameEntry.Text = credentials.SecondName;
+        DateOfBirthDatePicker.Date = credentials.DateOfBirth;
+        HomeAddressEntry.Text = credentials.HomeAddress;
+        PhoneNumberEntry.Text = credentials.PhoneNumber;
     }
 
     private void OnFirstNameTextChanged(object sender, TextChangedEventArgs e)
@@ -58,6 +69,8 @@ public partial class UserDefaultCredentialsPage
             PhoneNumberEntry.Text,
             ""
         );
+
+        _userCreationController.UpdateUserDefaultCredentials(userDefaultCredentials);
         await Navigation.PopAsync();
     }
 }

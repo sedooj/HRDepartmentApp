@@ -1,4 +1,4 @@
-namespace CourseWork.entity
+namespace CourseWork_2.Models
 {
     public sealed class UserDefaultCredentials
     {

@@ -1,8 +1,7 @@
-using CourseWork_2.entity;
-using CourseWork_2.Models;
-using CourseWork.entity.employmentHistory;
+using CourseWork_2.Models.employmentHistory;
+using CourseWork.entity;
 
-namespace CourseWork.entity;
+namespace CourseWork_2.Models;
 
 public sealed class Employee : Human
 {
