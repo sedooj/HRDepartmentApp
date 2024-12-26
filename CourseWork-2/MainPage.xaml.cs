@@ -1,18 +1,21 @@
 ﻿using CourseWork_2.Pages;
-using Microsoft.Maui.Controls;
 
-namespace CourseWork_2
+namespace CourseWork_2;
+
+public partial class MainPage
 {
-    public partial class MainPage : ContentPage
+    public MainPage()
     {
-        public MainPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private async void OnUserCreateClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new UserCreationPage());
-        }
+    private async void OnUserCreateClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new UserCreationPage());
+    }
+
+    private async void OnCompanyCreateClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new CompanyCreatePage());
     }
 }

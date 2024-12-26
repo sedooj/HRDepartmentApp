@@ -6,13 +6,19 @@
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="30,0"
+            Padding="30,10"
             Spacing="25">
             <Button
                 x:Name="NavigateToUserCreationPageButton"
                 Text="Создать пользователя"
                 SemanticProperties.Hint="Создать пользователя"
                 Clicked="OnUserCreateClicked"
+                HorizontalOptions="Fill" />
+            <Button
+                x:Name="NavigateToCompanyCreationPageButton"
+                Text="Создать компанию"
+                SemanticProperties.Hint="Создать компанию"
+                Clicked="OnCompanyCreateClicked"
                 HorizontalOptions="Fill" />
         </VerticalStackLayout>
     </ScrollView>

@@ -63,10 +63,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Pages\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <MauiXaml Update="ViewControllers\UserCreation\UserCreationPage.xaml">
         <SubType>Designer</SubType>
       </MauiXaml>
@@ -124,6 +120,39 @@
       </Compile>
       <Compile Update="Models\Human.cs">
         <DependentUpon>Employee.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Models\CareerMove.cs">
+        <DependentUpon>CareerHistory.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Models\Punishment.cs">
+        <DependentUpon>PunishmentHistory.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Models\Reward.cs">
+        <DependentUpon>RewardHistory.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Models\Company.cs">
+        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Models\PunishmentHistory.cs">
+        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Models\RewardHistory.cs">
+        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Models\AcademicDegree.cs">
+        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Models\AcademicRank.cs">
+        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ViewControllers\EducationDocumentViewController.cs">
+        <DependentUpon>UserCreationViewController.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ViewControllers\PassportViewController.cs">
+        <DependentUpon>UserCreationViewController.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ViewControllers\UserDefaultCredentialsViewController.cs">
+        <DependentUpon>UserCreationViewController.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 
