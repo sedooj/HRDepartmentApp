@@ -36,5 +36,9 @@ public partial class UserCreationPage
         var educationDocumentPage = new EducationDocumentPage(_controller.HumanData, _controller);
         Navigation.PushAsync(educationDocumentPage);
     }
-    
+
+    private async void OnLoadDataFromJson(object? sender, EventArgs e)
+    {
+        await _controller.LoadHumanDataFromFile("test.json");
+    }
 }
