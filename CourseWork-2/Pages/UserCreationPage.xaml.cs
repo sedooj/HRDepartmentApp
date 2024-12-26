@@ -34,17 +34,7 @@ public partial class UserCreationPage : ContentPage
     {
         await Navigation.PushAsync(new UserDefaultCredentialsPage());
     }
-
-    private async void OnEmploymentHistoryRecordsButtonClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new EmploymentHistoryRecordsPage());
-    }
-
-    private async void OnEducationButtonClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new EducationPage());
-    }
-
+    
     private async void OnEducationDocumentButtonClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new EducationDocumentPage());

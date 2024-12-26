@@ -1,7 +1,7 @@
-using CourseWork_2.entity;
+using CourseWork.entity;
 using CourseWork.entity.employmentHistory;
 
-namespace CourseWork.entity;
+namespace CourseWork_2.entity;
 
 public abstract class Human
 {
