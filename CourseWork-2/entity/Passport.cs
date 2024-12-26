@@ -12,4 +12,5 @@ public sealed class Passport
         DateOfIssue = dateOfIssue;
         WhoIssued = whoIssued;
     }
+    
 }

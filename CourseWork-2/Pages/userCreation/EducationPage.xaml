@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CourseWork_2.Pages.userCreation.EducationPage"
+             Title="Education">
+
+    <VerticalStackLayout Padding="30,0" Spacing="25">
+        <Entry x:Name="InstitutionEntry" Placeholder="Institution" HorizontalOptions="Fill" />
+        <Entry x:Name="DegreeEntry" Placeholder="Degree" HorizontalOptions="Fill" />
+        <Entry x:Name="FieldOfStudyEntry" Placeholder="Field of Study" HorizontalOptions="Fill" />
+        <Entry x:Name="StartYearEntry" Placeholder="Start Year" Keyboard="Numeric" HorizontalOptions="Fill" />
+        <Entry x:Name="EndYearEntry" Placeholder="End Year" Keyboard="Numeric" HorizontalOptions="Fill" />
+        <Button Text="Save" Clicked="OnSaveClicked" HorizontalOptions="Fill" />
+    </VerticalStackLayout>
+</ContentPage>

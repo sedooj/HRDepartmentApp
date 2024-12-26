@@ -4,7 +4,7 @@ namespace CourseWork.entity
     {
         private string _firstName;
         private string _lastName;
-        private readonly string _secondName;
+        private string _secondName;
         private int _age;
         private string _homeAddress;
         private string _phoneNumber;
