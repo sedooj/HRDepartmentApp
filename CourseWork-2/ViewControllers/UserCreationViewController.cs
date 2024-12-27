@@ -8,20 +8,6 @@ namespace CourseWork_2.ViewControllers;
 
 public class UserCreationViewController
 {
-    // public HumanDataHolder HumanData { get; set; } = new()
-    // {
-    //     Passport = new Passport("", "", DateTime.Now, ""),
-    //     UserDefaultCredentials = new UserDefaultCredentials("", "", "", DateTime.Now, "", "", ""),
-    //     EducationDocument = new EducationDocument(0, "", DateTime.Now, "", "", "",
-    //         EducationDocument.EducationLevels.Doctorate, "", DateTime.Now)
-    // };
-    // public HumanDataHolder HumanData { get; set; } = new()
-    // {
-    //     Passport = new Passport("1233", "121212", DateTime.Now, "сын шлюхи"),
-    //     UserDefaultCredentials = new UserDefaultCredentials("Пидор", "Гондон", "Иван", DateTime.Now, "залупа", "1231", ""),
-    //     EducationDocument = new EducationDocument(228, "Хуета", DateTime.Now, "Пидорас", "123122", "1212121",
-    //         EducationDocument.EducationLevels.Doctorate, "Залупа", DateTime.Now)
-    // };
     public HumanDataHolder? HumanData { get; set; }
 
     private bool ValidateHuman()
