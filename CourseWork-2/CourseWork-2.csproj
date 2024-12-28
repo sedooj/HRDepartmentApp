@@ -78,15 +78,6 @@
         <SubType>Designer</SubType>
         <DependentUpon>UserCreationPage.xaml</DependentUpon>
       </MauiXaml>
-      <MauiXaml Update="Pages\UserDefaultCredentialsPage.xaml">
-        <DependentUpon>UserCreationPage.xaml</DependentUpon>
-      </MauiXaml>
-      <MauiXaml Update="Pages\EducationDocumentPage.xaml">
-        <DependentUpon>UserCreationPage.xaml</DependentUpon>
-      </MauiXaml>
-      <MauiXaml Update="Pages\PassportPage.xaml">
-        <DependentUpon>UserCreationPage.xaml</DependentUpon>
-      </MauiXaml>
     </ItemGroup>
 
     <ItemGroup>
@@ -105,54 +96,6 @@
       <Compile Update="ViewControllers\UserCreation\EducationDocumentPage.xaml.cs">
         <DependentUpon>EducationDocumentPage.xaml</DependentUpon>
         <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Models\Passport.cs">
-        <DependentUpon>Human.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\UserDefaultCredentials.cs">
-        <DependentUpon>Human.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\EducationDocument.cs">
-        <DependentUpon>Human.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\Education.cs">
-        <DependentUpon>Human.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\Human.cs">
-        <DependentUpon>Employee.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\CareerMove.cs">
-        <DependentUpon>CareerHistory.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\Punishment.cs">
-        <DependentUpon>PunishmentHistory.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\Reward.cs">
-        <DependentUpon>RewardHistory.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\Company.cs">
-        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\PunishmentHistory.cs">
-        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\RewardHistory.cs">
-        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\AcademicDegree.cs">
-        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Models\AcademicRank.cs">
-        <DependentUpon>EmploymentHistoryRecord.cs</DependentUpon>
-      </Compile>
-      <Compile Update="ViewControllers\EducationDocumentViewController.cs">
-        <DependentUpon>UserCreationViewController.cs</DependentUpon>
-      </Compile>
-      <Compile Update="ViewControllers\PassportViewController.cs">
-        <DependentUpon>UserCreationViewController.cs</DependentUpon>
-      </Compile>
-      <Compile Update="ViewControllers\UserDefaultCredentialsViewController.cs">
-        <DependentUpon>UserCreationViewController.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 
