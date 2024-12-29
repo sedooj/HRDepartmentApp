@@ -11,18 +11,19 @@ namespace CourseWork_2.Data.ViewControllers
         private readonly LocalStorageService<Human> _humanStorageService = new();
         private readonly IHRDepartment _hrDepartmentService = new HRDepartmentService();
 
-        public IEnumerable<Company> LoadCompanies()
-        {
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string directoryPath = Path.Combine(documentsPath, "companies");
-            return _companyStorageService.LoadEntities(directoryPath);
-        }
+        public List<Company>? Companies { get; private set; }
+        public List<Human>? Humans { get; private set; }
+        public Company? SelectedCompany { get; set; }
+        public Human? SelectedHuman { get; set; }
 
-        public IEnumerable<Human> LoadHumans()
+        public void LoadData()
         {
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string directoryPath = Path.Combine(documentsPath, "humans");
-            return _humanStorageService.LoadEntities(directoryPath);
+            string companyDirectoryPath = Path.Combine(documentsPath, "companies");
+            string humanDirectoryPath = Path.Combine(documentsPath, "humans");
+
+            Companies = _companyStorageService.LoadEntities(companyDirectoryPath).ToList();
+            Humans = _humanStorageService.LoadEntities(humanDirectoryPath).ToList();
         }
 
         public bool IsEmployee(Company company, Human human)
@@ -30,21 +31,19 @@ namespace CourseWork_2.Data.ViewControllers
             return company.Employees.Any(e => e.UUID == human.UUID);
         }
 
-        public void InviteEmployee(Company company, Human human, string position)
+        public void InviteEmployee(string position)
         {
-            if (!IsEmployee(company, human))
+            if (SelectedCompany != null && SelectedHuman != null && !IsEmployee(SelectedCompany, SelectedHuman))
             {
-                _hrDepartmentService.InviteEmployee(company, human, position);
-                SaveCompany(company);
+                _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman, position);
             }
         }
 
-        public void DismissEmployee(Company company, Human human)
+        public void FireEmployee(Company company, Employee employee)
         {
-            if (IsEmployee(company, human))
+            if (IsEmployee(company, employee))
             {
-                _hrDepartmentService.FireEmployee(company, human);
-                SaveCompany(company);
+                _hrDepartmentService.FireEmployee(company, employee);
             }
         }
 

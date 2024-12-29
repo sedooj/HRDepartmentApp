@@ -29,6 +29,7 @@ public class HRDepartmentService : IHRDepartment
         var employee = company.Employees.FirstOrDefault(e => e.UUID == human.UUID);
         if (employee == null) return;
         company.Employees.Remove(employee);
+        Console.WriteLine("Firing employee");
         SaveCompany(company);
     }
 

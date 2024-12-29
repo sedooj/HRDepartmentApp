@@ -6,44 +6,57 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
     public partial class EmployeeManagementPage
     {
         private readonly EmployeeManagementPageViewController _controller = new();
-        private List<Company>? _companies;
-        private List<Human>? _humans;
-        private Company? _selectedCompany;
-        private Human? _selectedHuman;
 
         public EmployeeManagementPage()
         {
             InitializeComponent();
+            _controller.LoadData();
             LoadData();
         }
 
-        private void LoadData()
+        protected override void OnAppearing()
         {
-            _companies = _controller.LoadCompanies().ToList();
-            _humans = _controller.LoadHumans().ToList();
+            base.OnAppearing();
+            LoadEmployees();
+        }
 
-            CompanyPicker.ItemsSource = _companies.Select(c => c.Name).ToList();
-            HumanPicker.ItemsSource = _humans.Select(h => h.UserDefaultCredentials.FirstName).ToList();
+        public void LoadData()
+        {
+            CompanyPicker.ItemsSource = _controller.Companies?.Select(c => c.Name).ToList();
+            if (_controller.SelectedCompany != null)
+            {
+                var employeesUUIDs = _controller.SelectedCompany.Employees.Select(e => e.UUID).ToList();
+                HumanPicker.ItemsSource = _controller.Humans?
+                    .Where(h => !employeesUUIDs.Contains(h.UUID))
+                    .Select(h => h.UserDefaultCredentials.FirstName)
+                    .ToList();
+            }
+            else
+            {
+                HumanPicker.ItemsSource = _controller.Humans?.Select(h => h.UserDefaultCredentials.FirstName).ToList();
+            }
         }
 
         private void OnCompanySelected(object sender, EventArgs e)
         {
-            _selectedCompany = _companies[CompanyPicker.SelectedIndex];
+            _controller.SelectedCompany = _controller.Companies?[CompanyPicker.SelectedIndex];
             UpdateButtonsVisibility();
+            LoadData();
             LoadEmployees();
         }
 
         private void OnHumanSelected(object sender, EventArgs e)
         {
-            _selectedHuman = _humans[HumanPicker.SelectedIndex];
+            _controller.SelectedHuman = _controller.Humans?[HumanPicker.SelectedIndex];
             UpdateButtonsVisibility();
         }
 
         private void UpdateButtonsVisibility()
         {
-            if (_selectedCompany != null && _selectedHuman != null)
+            if (_controller.SelectedCompany != null && _controller.SelectedHuman != null)
             {
-                bool isEmployee = _controller.IsEmployee(_selectedCompany, _selectedHuman);
+                bool isEmployee = _controller.IsEmployee(_controller.SelectedCompany, _controller.SelectedHuman);
+                Console.WriteLine(isEmployee);
                 InviteButton.IsVisible = !isEmployee;
                 PositionEntry.IsVisible = !isEmployee;
             }
@@ -52,16 +65,18 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
         private void OnInviteClicked(object sender, EventArgs e)
         {
             string position = PositionEntry.Text;
-            _controller.InviteEmployee(_selectedCompany, _selectedHuman, position);
+            _controller.InviteEmployee(position);
             UpdateButtonsVisibility();
             LoadEmployees();
+
+            HumanPicker.SelectedIndex = -1;
         }
 
-        private void LoadEmployees()
+        public void LoadEmployees()
         {
-            if (_selectedCompany != null)
+            if (_controller.SelectedCompany != null)
             {
-                var employees = _selectedCompany.Employees.Select((e, index) => new
+                var employees = _controller.SelectedCompany.Employees.Select((e, index) => new
                 {
                     Number = index + 1,
                     Name = e.UserDefaultCredentials.FirstName,
@@ -73,14 +88,14 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
-        private void OnViewClicked(object sender, EventArgs e)
+        private async void OnViewClicked(object sender, EventArgs e)
         {
             var button = sender as Button;
             var employeeUUID = button?.CommandParameter as string;
-            var employee = _selectedCompany?.Employees.FirstOrDefault(e => e.UUID == employeeUUID);
+            var employee = _controller.SelectedCompany?.Employees.FirstOrDefault(e => e.UUID == employeeUUID);
             if (employee != null)
             {
-                // Handle view button click logic here
+                await Navigation.PushAsync(new EmployeePage(_controller.SelectedCompany, employee, _controller));
             }
         }
     }
