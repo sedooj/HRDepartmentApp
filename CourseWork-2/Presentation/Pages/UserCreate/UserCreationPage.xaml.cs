@@ -1,4 +1,4 @@
-using CourseWork_2.Data.ViewControllers;
+using CourseWork_2.Data.ViewControllers.UserCreation;
 
 namespace CourseWork_2.Presentation.Pages.UserCreate;
 
@@ -13,32 +13,59 @@ public partial class UserCreationPage
 
     private async void OnCreateUserClicked(object sender, EventArgs e)
     {
-        if (await _controller.CreateHuman())
+        try
         {
-            await Navigation.PopAsync();
+            if (await _controller.CreateHuman())
+            {
+                await Navigation.PopAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in OnCreateUserClicked: {ex.Message}");
+            await DisplayAlert("Error", "Failed to create user.", "OK");
         }
     }
 
     private void OnPassportButtonClicked(object sender, EventArgs e)
     {
-        var passportPage = new PassportPage(_controller.HumanData, _controller);
-        Navigation.PushAsync(passportPage);
+        try
+        {
+            var passportPage = new PassportPage(_controller.HumanData, _controller);
+            Navigation.PushAsync(passportPage);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in OnPassportButtonClicked: {ex.Message}");
+            DisplayAlert("Error", "Failed to open Passport Page.", "OK");
+        }
     }
 
     private void OnUserDefaultCredentialsButtonClicked(object sender, EventArgs e)
     {
-        var userDefaultCredentialsPage = new UserDefaultCredentialsPage(_controller.HumanData, _controller);
-        Navigation.PushAsync(userDefaultCredentialsPage);
+        try
+        {
+            var userDefaultCredentialsPage = new UserDefaultCredentialsPage(_controller.HumanData, _controller);
+            Navigation.PushAsync(userDefaultCredentialsPage);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in OnUserDefaultCredentialsButtonClicked: {ex.Message}");
+            DisplayAlert("Error", "Failed to open User Default Credentials Page.", "OK");
+        }
     }
 
     private void OnEducationDocumentButtonClicked(object sender, EventArgs e)
     {
-        var educationDocumentPage = new EducationDocumentPage(_controller.HumanData, _controller);
-        Navigation.PushAsync(educationDocumentPage);
-    }
-
-    private async void OnLoadDataFromJson(object? sender, EventArgs e)
-    {
-        await _controller.LoadHumanDataFromFile("test.json");
+        try
+        {
+            var educationDocumentPage = new EducationDocumentPage(_controller.HumanData, _controller);
+            Navigation.PushAsync(educationDocumentPage);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in OnEducationDocumentButtonClicked: {ex.Message}");
+            DisplayAlert("Error", "Failed to open Education Document Page.", "OK");
+        }
     }
 }

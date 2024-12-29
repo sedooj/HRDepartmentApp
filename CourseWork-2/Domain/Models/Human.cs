@@ -49,3 +49,10 @@ public class Human
         set { _educationDocument = value; }
     }
 }
+
+public class HumanDataHolder
+{
+    public Passport? Passport { get; set; }
+    public UserDefaultCredentials? UserDefaultCredentials { get; set; }
+    public EducationDocument? EducationDocument { get; set; }
+}

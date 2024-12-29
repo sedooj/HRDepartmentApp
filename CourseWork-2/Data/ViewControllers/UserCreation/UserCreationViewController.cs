@@ -2,11 +2,11 @@ using CourseWork_2.Data.Service;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Presentation.Util;
 
-namespace CourseWork_2.Data.ViewControllers
+namespace CourseWork_2.Data.ViewControllers.UserCreation
 {
     public class UserCreationViewController
     {
-        public HumanDataHolder? HumanData { get; set; }
+        public HumanDataHolder HumanData { get; set; } = new();
         private readonly LocalStorageService<Human> _localStorageService = new();
 
         private bool ValidateHuman()
@@ -23,6 +23,9 @@ namespace CourseWork_2.Data.ViewControllers
                     await DisplayAlert("Ошибка валидации", "Некоторые поля заполнены неверно.", "OK");
                     return false;
                 }
+
+                if (HumanData.Passport == null || HumanData.UserDefaultCredentials == null ||
+                    HumanData.EducationDocument == null) return false;
 
                 Human human = new Human(
                     HumanData.Passport,
@@ -70,15 +73,24 @@ namespace CourseWork_2.Data.ViewControllers
             }
         }
 
+        public void UpdatePassport(Passport passport)
+        {
+            HumanData.Passport = passport;
+        }
+
+        public void UpdateUserDefaultCredentials(UserDefaultCredentials userDefaultCredentials)
+        {
+            HumanData.UserDefaultCredentials = userDefaultCredentials;
+        }
+
+        public void UpdateEducationDocument(EducationDocument educationDocument)
+        {
+            HumanData.EducationDocument = educationDocument;
+        }
+
         private Task DisplayAlert(string title, string message, string cancel)
         {
             return Application.Current.MainPage.DisplayAlert(title, message, cancel);
         }
     }
-}
-public class HumanDataHolder
-{
-    public Passport Passport { get; set; }
-    public UserDefaultCredentials UserDefaultCredentials { get; set; }
-    public EducationDocument EducationDocument { get; set; }
 }

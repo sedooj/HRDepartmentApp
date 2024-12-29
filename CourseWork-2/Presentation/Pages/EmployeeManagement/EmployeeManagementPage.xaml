@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CourseWork_2.Presentation.Pages.EmployeeManagement.EmployeeManagementPage"
+             Title="Управление сотрудниками компании">
+    <StackLayout Padding="30,10">
+        <Label Text="Выберите компанию" />
+        <Picker x:Name="CompanyPicker" SelectedIndexChanged="OnCompanySelected" />
+        
+        <Label Text="Выберите человека" />
+        <Picker x:Name="HumanPicker" SelectedIndexChanged="OnHumanSelected" />
+        
+        <Button x:Name="InviteButton" Text="Invite" Clicked="OnInviteClicked" IsVisible="False" />
+        <Button x:Name="DismissButton" Text="Dismiss" Clicked="OnDismissClicked" IsVisible="False" />
+    </StackLayout>
+</ContentPage>

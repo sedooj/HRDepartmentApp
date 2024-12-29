@@ -20,6 +20,12 @@
                 SemanticProperties.Hint="Создать компанию"
                 Clicked="OnCompanyCreateClicked"
                 HorizontalOptions="Fill" />
+            <Button
+                x:Name="NavigateToEmployeeManagementPageButton"
+                Text="Управление сотрудниками"
+                SemanticProperties.Hint="Управление сотрудниками"
+                Clicked="OnEmployeeManagementClicked"
+                HorizontalOptions="Fill" />
         </VerticalStackLayout>
     </ScrollView>
 

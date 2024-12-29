@@ -1,4 +1,5 @@
 using CourseWork_2.Data.ViewControllers;
+using CourseWork_2.Data.ViewControllers.UserCreation;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Presentation.Util;
 
@@ -13,15 +14,20 @@ public partial class PassportPage
     {
         InitializeComponent();
         _userCreationController = userCreationController;
+        SerialEntry.TextChanged += OnSerialEntryTextChanged;
+        NumberEntry.TextChanged += OnNumberEntryTextChanged;
+        
+        if (humanData.Passport == null)
+        {
+            Console.WriteLine("HumanData.Passport is null");
+            return;
+        }
 
         var passport = humanData.Passport;
         SerialEntry.Text = passport.Serial;
         NumberEntry.Text = passport.Number;
         DateOfIssueDatePicker.Date = passport.DateOfIssue;
         WhoIssuedEntry.Text = passport.WhoIssued;
-
-        SerialEntry.TextChanged += OnSerialEntryTextChanged;
-        NumberEntry.TextChanged += OnNumberEntryTextChanged;
     }
 
     private void OnSerialEntryTextChanged(object sender, TextChangedEventArgs e)

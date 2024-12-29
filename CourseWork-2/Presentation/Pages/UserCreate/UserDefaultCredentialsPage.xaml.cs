@@ -1,4 +1,5 @@
 using CourseWork_2.Data.ViewControllers;
+using CourseWork_2.Data.ViewControllers.UserCreation;
 using CourseWork_2.Domain.Models;
 
 namespace CourseWork_2.Presentation.Pages.UserCreate;
@@ -12,7 +13,8 @@ public partial class UserDefaultCredentialsPage
     {
         InitializeComponent();
         _userCreationController = userCreationController;
-
+        
+        if (humanData.UserDefaultCredentials == null) return;
         var credentials = humanData.UserDefaultCredentials;
         FirstNameEntry.Text = credentials.FirstName;
         LastNameEntry.Text = credentials.LastName;

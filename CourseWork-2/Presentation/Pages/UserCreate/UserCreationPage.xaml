@@ -13,7 +13,6 @@
                         HorizontalOptions="Fill" />
                 <Button Text="Заполнить документ об образовании" Clicked="OnEducationDocumentButtonClicked"
                         HorizontalOptions="Fill" />
-                <Button Text="Load data from json" Clicked="OnLoadDataFromJson" HorizontalOptions="Fill" />
             </VerticalStackLayout>
         </ScrollView>
         <Button Grid.Row="1" Text="Создать" Clicked="OnCreateUserClicked" HorizontalOptions="Fill" Margin="30,10" />

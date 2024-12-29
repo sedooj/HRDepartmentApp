@@ -1,4 +1,5 @@
 using CourseWork_2.Data.ViewControllers;
+using CourseWork_2.Data.ViewControllers.UserCreation;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Presentation.Util;
 
@@ -14,7 +15,10 @@ public partial class EducationDocumentPage
         InitializeComponent();
         _userCreationController = userCreationController;
         LevelPicker.ItemsSource = _controller.GetEducationLevelTranslations().Keys.ToList();
-
+        SerialEntry.TextChanged += OnSerialEntryTextChanged;
+        NumberEntry.TextChanged += OnNumberEntryTextChanged;
+        
+        if (humanData.EducationDocument == null) return;
         var educationDocument = humanData.EducationDocument;
         SerialEntry.Text = educationDocument.Serial;
         NumberEntry.Text = educationDocument.Number;
@@ -24,9 +28,6 @@ public partial class EducationDocumentPage
         DirectionEntry.Text = educationDocument.Direction;
         GraduatedDatePicker.Date = educationDocument.GraduatedDate;
         LevelPicker.SelectedItem = _controller.GetEducationLevelTranslations().FirstOrDefault(x => x.Value == educationDocument.Level).Key;
-
-        SerialEntry.TextChanged += OnSerialEntryTextChanged;
-        NumberEntry.TextChanged += OnNumberEntryTextChanged;
     }
 
     private void OnSerialEntryTextChanged(object sender, TextChangedEventArgs e)
