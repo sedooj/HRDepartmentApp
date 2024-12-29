@@ -5,8 +5,9 @@ namespace CourseWork_2.Presentation.Util;
 
 public static class Validator
 {
-    public static bool ValidateHuman(HumanDataHolder human)
+    public static bool ValidateHuman(HumanDataHolder? human)
     {
+        if (human == null) return false;
         return ValidateName(human.UserDefaultCredentials.FirstName) &&
                ValidateName(human.UserDefaultCredentials.LastName) &&
                ValidateName(human.UserDefaultCredentials.SecondName) &&

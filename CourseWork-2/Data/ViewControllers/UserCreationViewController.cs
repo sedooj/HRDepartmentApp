@@ -1,129 +1,81 @@
+using CourseWork_2.Data.Service;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Presentation.Util;
 
-namespace CourseWork_2.Data.ViewControllers;
-
-public class UserCreationViewController
+namespace CourseWork_2.Data.ViewControllers
 {
-    public HumanDataHolder? HumanData { get; set; }
+    public class UserCreationViewController
+    {
+        public HumanDataHolder? HumanData { get; set; }
+        private readonly LocalStorageService<Human> _localStorageService = new();
 
-    private bool ValidateHuman()
-    {
-        return Validator.ValidateHuman(HumanData);
-    }
-    
-    public async Task<bool> CreateHuman()
-    {
-        try
+        private bool ValidateHuman()
         {
-            if (!ValidateHuman())
+            return Validator.ValidateHuman(HumanData);
+        }
+
+        public async Task<bool> CreateHuman()
+        {
+            try
             {
-                await DisplayAlert("Ошибка валидации", "Некоторые поля заполнены неверно.", "OK");
+                if (!ValidateHuman())
+                {
+                    await DisplayAlert("Ошибка валидации", "Некоторые поля заполнены неверно.", "OK");
+                    return false;
+                }
+
+                Human human = new Human(
+                    HumanData.Passport,
+                    HumanData.UserDefaultCredentials,
+                    new List<EmploymentHistoryRecord>(),
+                    new Education(
+                        0,
+                        HumanData.EducationDocument.Institution,
+                        HumanData.EducationDocument.GraduatedDate,
+                        HumanData.EducationDocument.Specialty
+                    ),
+                    HumanData.EducationDocument
+                );
+
+                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string directoryPath = Path.Combine(documentsPath, "SavedHumans");
+
+                await _localStorageService.SaveEntityAsync(directoryPath, human);
+
+                Console.WriteLine("Human entity created and saved successfully.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating Human entity: {ex}");
                 return false;
             }
-
-            Human human = new Human(
-                HumanData.Passport,
-                HumanData.UserDefaultCredentials,
-                new List<EmploymentHistoryRecord>(),
-                new Education(
-                    0,
-                    HumanData.EducationDocument.Institution,
-                    HumanData.EducationDocument.GraduatedDate,
-                    HumanData.EducationDocument.Specialty
-                ),
-                HumanData.EducationDocument
-            );
-
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string directoryPath = Path.Combine(documentsPath, "SavedHumans");
-            Console.WriteLine($"Directory path: {directoryPath}");
-            Directory.CreateDirectory(directoryPath);
-            Console.WriteLine("Directory created successfully.");
-
-            string filePath = Path.Combine(directoryPath, $"{Guid.NewGuid()}.json");
-            Console.WriteLine($"File path: {filePath}");
-
-            JsonObjectSerializer serializer = new JsonObjectSerializer();
-            string jsonString = serializer.Serialize(human);
-            await File.WriteAllTextAsync(filePath, jsonString);
-            Console.WriteLine("File written successfully.");
-
-            Console.WriteLine("Human entity created and saved successfully.");
-            Console.WriteLine("Success");
-            return true;
         }
-        catch (Exception ex)
+
+        public async Task<IEnumerable<Human>> LoadHumans()
         {
-            Console.WriteLine($"Error creating Human entity: {ex}");
-            Console.WriteLine($"Error: {ex}");
-            return false;
-        }
-    }
-    
-    public void UpdatePassport(Passport passport)
-    {
-        HumanData.Passport = passport;
-    }
-
-    public void UpdateUserDefaultCredentials(UserDefaultCredentials credentials)
-    {
-        HumanData.UserDefaultCredentials = credentials;
-    }
-
-    public void UpdateEducationDocument(EducationDocument document)
-    {
-        HumanData.EducationDocument = document;
-    }
-
-    private Task DisplayAlert(string title, string message, string cancel)
-    {
-        return Application.Current.MainPage.DisplayAlert(title, message, cancel);
-    }
-    
-    public async Task<HumanDataHolder?> LoadHumanDataFromFile(string fileName)
-    {
-        try
-        {
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string directoryPath = Path.Combine(documentsPath, "SavedHumans");
-            string filePath = Path.Combine(directoryPath, fileName);
-
-            if (!File.Exists(filePath))
+            try
             {
-                Console.WriteLine("File not found.");
-                return null;
+                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string directoryPath = Path.Combine(documentsPath, "SavedHumans");
+
+                var humans = await _localStorageService.LoadEntitiesAsync(directoryPath);
+                Console.WriteLine("Human entities loaded successfully.");
+                return humans;
             }
-
-            string jsonString = await File.ReadAllTextAsync(filePath);
-            JsonObjectSerializer serializer = new JsonObjectSerializer();
-            Human? human = serializer.Deserialize<Human>(jsonString);
-
-            if (human == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("Failed to deserialize the file.");
-                return null;
+                Console.WriteLine($"Error loading Human entities: {ex}");
+                return new List<Human>();
             }
-
-            var loadedHumanData = HumanData = new HumanDataHolder
-            {
-                Passport = human.Passport,
-                UserDefaultCredentials = human.UserDefaultCredentials,
-                EducationDocument = human.EducationDocument
-            };
-
-            Console.WriteLine("Human data loaded successfully.");
-            return loadedHumanData;
         }
-        catch (Exception ex)
+
+        private Task DisplayAlert(string title, string message, string cancel)
         {
-            Console.WriteLine($"Error loading Human data: {ex}");
+            return Application.Current.MainPage.DisplayAlert(title, message, cancel);
         }
-
-        return null;
     }
 }
-
 public class HumanDataHolder
 {
     public Passport Passport { get; set; }
