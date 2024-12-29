@@ -15,15 +15,16 @@ public partial class CompanyCreatePage
         PhoneEntry.TextChanged += OnPhoneEntryTextChanged;
     }
 
-    private async void OnCreateCompanyClicked(object sender, EventArgs e)
+    private void OnCreateCompanyClicked(object sender, EventArgs e)
     {
         string name = NameEntry.Text;
         string address = AddressEntry.Text;
         string phone = PhoneEntry.Text;
 
-        if (await _controller.CreateCompany(name, address, phone))
+        if (_controller.CreateCompany(name, address, phone))
         {
-            await Navigation.PopAsync();
+            _controller.SaveCompanyToJson();
+            Navigation.PopAsync();
         }
     }
 

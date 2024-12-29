@@ -7,16 +7,16 @@ public class LocalStorageService<T> : IStorage<T> where T : class
 {
     private readonly JsonObjectSerializer _serializer = new();
 
-    public async Task<IEnumerable<T>> LoadEntitiesAsync(string directoryPath)
+    public IEnumerable<T> LoadEntities(string dir)
     {
         List<T> entities = new List<T>();
 
-        if (Directory.Exists(directoryPath))
+        if (Directory.Exists(dir))
         {
-            var files = Directory.GetFiles(directoryPath, "*.json");
+            var files = Directory.GetFiles(dir, "*.json");
             foreach (var file in files)
             {
-                var jsonString = await File.ReadAllTextAsync(file);
+                var jsonString = File.ReadAllText(file);
                 var entity = _serializer.Deserialize<T>(jsonString);
                 if (entity != null)
                 {
@@ -28,11 +28,42 @@ public class LocalStorageService<T> : IStorage<T> where T : class
         return entities;
     }
 
-    public async Task SaveEntityAsync(string directoryPath, T entity)
+    public T? LoadEntity(string dir)
     {
+        string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        string filePath = Path.Combine(directoryPath, $"{dir}.json");
+
+        if (File.Exists(filePath))
+        {
+            var jsonString = File.ReadAllText(filePath);
+            return _serializer.Deserialize<T>(jsonString);
+        }
+
+        return null;
+    }
+
+    public void SaveEntity(string dir, T entity)
+    {
+        string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         Directory.CreateDirectory(directoryPath);
-        string filePath = Path.Combine(directoryPath, $"_userCreationData.json");
+        string filePath = Path.Combine(directoryPath, $"{dir}.json");
         var jsonString = _serializer.Serialize(entity);
-        await File.WriteAllTextAsync(filePath, jsonString);
+        File.WriteAllText(filePath, jsonString);
+    }
+
+    public void UpdateEntity(string dir, T updatedEntity)
+    {
+        string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        string filePath = Path.Combine(directoryPath, $"{dir}.json");
+
+        if (File.Exists(filePath))
+        {
+            var jsonString = _serializer.Serialize(updatedEntity);
+            File.WriteAllText(filePath, jsonString);
+        }
+        else
+        {
+            SaveEntity(dir, updatedEntity);
+        }
     }
 }

@@ -2,21 +2,29 @@ namespace CourseWork_2.Domain.Models;
 
 public class Human
 {
+    private string _uuid;
     private Passport _passport;
     private UserDefaultCredentials _userDefaultCredentials;
     private List<EmploymentHistoryRecord> _employmentHistoryRecords;
     private Education _education;
     private EducationDocument _educationDocument;
 
-    public Human(Passport passport, UserDefaultCredentials userDefaultCredentials,
+    public Human(string uuid, Passport passport, UserDefaultCredentials userDefaultCredentials,
         List<EmploymentHistoryRecord> employmentHistoryRecords, Education education,
         EducationDocument educationDocument)
     {
+        _uuid = uuid;
         _passport = passport;
         _userDefaultCredentials = userDefaultCredentials;
         _employmentHistoryRecords = employmentHistoryRecords;
         _education = education;
         _educationDocument = educationDocument;
+    }
+    
+    public string UUID
+    {
+        get { return _uuid; }
+        set { _uuid = value; }
     }
 
     public Passport Passport

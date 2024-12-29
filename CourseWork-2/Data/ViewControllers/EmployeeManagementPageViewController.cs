@@ -1,5 +1,7 @@
 using CourseWork_2.Data.Service;
 using CourseWork_2.Domain.Models;
+using CourseWork_2.Domain.Service;
+using CourseWork_2.Presentation.Util;
 
 namespace CourseWork_2.Data.ViewControllers
 {
@@ -7,50 +9,60 @@ namespace CourseWork_2.Data.ViewControllers
     {
         private readonly LocalStorageService<Company> _companyStorageService = new();
         private readonly LocalStorageService<Human> _humanStorageService = new();
+        private readonly IHRDepartment _hrDepartmentService = new HRDepartmentService();
 
-        public async Task<IEnumerable<Company>> LoadCompaniesAsync()
+        public IEnumerable<Company> LoadCompanies()
         {
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string directoryPath = Path.Combine(documentsPath, "SavedCompanies");
-            return await _companyStorageService.LoadEntitiesAsync(directoryPath);
+            string directoryPath = Path.Combine(documentsPath, "companies");
+            return _companyStorageService.LoadEntities(directoryPath);
         }
 
-        public async Task<IEnumerable<Human>> LoadHumansAsync()
+        public IEnumerable<Human> LoadHumans()
         {
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string directoryPath = Path.Combine(documentsPath, "SavedHumans");
-            return await _humanStorageService.LoadEntitiesAsync(directoryPath);
+            string directoryPath = Path.Combine(documentsPath, "humans");
+            return _humanStorageService.LoadEntities(directoryPath);
         }
 
         public bool IsEmployee(Company company, Human human)
         {
-            // return company.Employees.Any(e => e.Id == human.Id); TODO()
-            return false;
+            return company.Employees.Any(e => e.UUID == human.UUID);
         }
 
-        public async Task InviteEmployeeAsync(Company company, Human human)
+        public void InviteEmployee(Company company, Human human, string position)
         {
-            // if (!IsEmployee(company, human))
-            // {
-            //     // company.Employees.Add(human);
-            //     await SaveCompanyAsync(company);
-            // }
+            if (!IsEmployee(company, human))
+            {
+                _hrDepartmentService.InviteEmployee(company, human, position);
+                SaveCompany(company);
+            }
         }
 
-        public async Task DismissEmployeeAsync(Company company, Human human)
+        public void DismissEmployee(Company company, Human human)
         {
-            // if (IsEmployee(company, human))
-            // {
-                // company.Employees.RemoveAll(e => e.Id == human.Id);
-                // await SaveCompanyAsync(company);
-            // }
+            if (IsEmployee(company, human))
+            {
+                _hrDepartmentService.FireEmployee(company, human);
+                SaveCompany(company);
+            }
         }
 
-        private async Task SaveCompanyAsync(Company company)
+        private void SaveCompany(Company company)
         {
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string directoryPath = Path.Combine(documentsPath, "SavedCompanies");
-            await _companyStorageService.SaveEntityAsync(directoryPath, company);
+            string directoryPath = Path.Combine(documentsPath, "companies");
+
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            string filePath = Path.Combine(directoryPath, $"{company.Name}.json");
+
+            string json = new JsonObjectSerializer().Serialize(company);
+
+            File.WriteAllText(filePath, json);
         }
     }
 }

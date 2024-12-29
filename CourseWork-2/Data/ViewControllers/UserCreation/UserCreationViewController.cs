@@ -14,13 +14,13 @@ namespace CourseWork_2.Data.ViewControllers.UserCreation
             return Validator.ValidateHuman(HumanData);
         }
 
-        public async Task<bool> CreateHuman()
+        public bool CreateHuman()
         {
             try
             {
                 if (!ValidateHuman())
                 {
-                    await DisplayAlert("Ошибка валидации", "Некоторые поля заполнены неверно.", "OK");
+                    DisplayAlert("Ошибка валидации", "Некоторые поля заполнены неверно.", "OK");
                     return false;
                 }
 
@@ -28,6 +28,7 @@ namespace CourseWork_2.Data.ViewControllers.UserCreation
                     HumanData.EducationDocument == null) return false;
 
                 Human human = new Human(
+                    Guid.NewGuid().ToString(),
                     HumanData.Passport,
                     HumanData.UserDefaultCredentials,
                     new List<EmploymentHistoryRecord>(),
@@ -41,9 +42,16 @@ namespace CourseWork_2.Data.ViewControllers.UserCreation
                 );
 
                 string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string directoryPath = Path.Combine(documentsPath, "SavedHumans");
+                string directoryPath = Path.Combine(documentsPath, "humans");
 
-                await _localStorageService.SaveEntityAsync(directoryPath, human);
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                string filePath = Path.Combine(directoryPath, $"{human.UUID}.json");
+                string json = new JsonObjectSerializer().Serialize(human);
+                File.WriteAllText(filePath, json);
 
                 Console.WriteLine("Human entity created and saved successfully.");
                 return true;
@@ -52,24 +60,6 @@ namespace CourseWork_2.Data.ViewControllers.UserCreation
             {
                 Console.WriteLine($"Error creating Human entity: {ex}");
                 return false;
-            }
-        }
-
-        public async Task<IEnumerable<Human>> LoadHumans()
-        {
-            try
-            {
-                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string directoryPath = Path.Combine(documentsPath, "SavedHumans");
-
-                var humans = await _localStorageService.LoadEntitiesAsync(directoryPath);
-                Console.WriteLine("Human entities loaded successfully.");
-                return humans;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading Human entities: {ex}");
-                return new List<Human>();
             }
         }
 

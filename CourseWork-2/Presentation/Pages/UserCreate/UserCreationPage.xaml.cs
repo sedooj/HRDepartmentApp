@@ -11,19 +11,19 @@ public partial class UserCreationPage
         InitializeComponent();
     }
 
-    private async void OnCreateUserClicked(object sender, EventArgs e)
+    private void OnCreateUserClicked(object sender, EventArgs e)
     {
         try
         {
-            if (await _controller.CreateHuman())
+            if (_controller.CreateHuman())
             {
-                await Navigation.PopAsync();
+                Navigation.PopAsync();
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error in OnCreateUserClicked: {ex.Message}");
-            await DisplayAlert("Error", "Failed to create user.", "OK");
+            DisplayAlert("Error", "Failed to create user.", "OK");
         }
     }
 

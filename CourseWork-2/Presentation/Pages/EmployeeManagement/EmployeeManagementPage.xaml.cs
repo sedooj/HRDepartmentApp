@@ -17,10 +17,10 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             LoadData();
         }
 
-        private async void LoadData()
+        private void LoadData()
         {
-            _companies = (await _controller.LoadCompaniesAsync()).ToList();
-            _humans = (await _controller.LoadHumansAsync()).ToList();
+            _companies = _controller.LoadCompanies().ToList();
+            _humans = _controller.LoadHumans().ToList();
 
             CompanyPicker.ItemsSource = _companies.Select(c => c.Name).ToList();
             HumanPicker.ItemsSource = _humans.Select(h => h.UserDefaultCredentials.FirstName).ToList();
@@ -30,6 +30,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
         {
             _selectedCompany = _companies[CompanyPicker.SelectedIndex];
             UpdateButtonsVisibility();
+            LoadEmployees();
         }
 
         private void OnHumanSelected(object sender, EventArgs e)
@@ -48,16 +49,33 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
-        private async void OnInviteClicked(object sender, EventArgs e)
+        private void OnInviteClicked(object sender, EventArgs e)
         {
-            await _controller.InviteEmployeeAsync(_selectedCompany, _selectedHuman);
+            _controller.InviteEmployee(_selectedCompany, _selectedHuman, "Position");
             UpdateButtonsVisibility();
+            LoadEmployees();
         }
 
-        private async void OnDismissClicked(object sender, EventArgs e)
+        private void OnDismissClicked(object sender, EventArgs e)
         {
-            await _controller.DismissEmployeeAsync(_selectedCompany, _selectedHuman);
+            _controller.DismissEmployee(_selectedCompany, _selectedHuman);
             UpdateButtonsVisibility();
+            LoadEmployees();
+        }
+
+        private void LoadEmployees()
+        {
+            if (_selectedCompany != null)
+            {
+                var employees = _selectedCompany.Employees.Select((e, index) => new
+                {
+                    Number = index + 1,
+                    Name = e.UserDefaultCredentials.FirstName,
+                    Position = e.Position
+                }).ToList();
+
+                EmployeesCollectionView.ItemsSource = employees;
+            }
         }
     }
 }

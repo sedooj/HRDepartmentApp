@@ -5,18 +5,33 @@ namespace CourseWork_2.Data.Service;
 
 public class LocalCompanyService : ICompanyService
 {
-    public bool InviteEmployee(string serial, string number)
+    private readonly LocalStorageService<Company> _storage = new();
+
+    public bool RewardEmployee(Company company, Human human, Reward reward)
     {
-        throw new NotImplementedException();
+        var employee = GetEmployee(company, human.UUID);
+        if (employee == null) return false;
+        employee.EmploymentHistoryRecords.Last().Rewards.Add(reward);
+        SaveCompany(company);
+        return true;
     }
 
-    public bool DismissEmployeeById(long employeeId)
+    public bool PunishEmployee(Company company, Human human, Punishment punishment)
     {
-        throw new NotImplementedException();
+        var employee = GetEmployee(company, human.UUID);
+        if (employee == null) return false;
+        employee.EmploymentHistoryRecords.Last().Punishments.Add(punishment);
+        SaveCompany(company);
+        return true;
     }
 
-    public Employee FindEmployeeById(long employeeId)
+    private Employee? GetEmployee(Company company, string uuid)
     {
-        throw new NotImplementedException();
+        return company.Employees.FirstOrDefault(e => e.UUID == uuid);
+    }
+
+    private void SaveCompany(Company company)
+    {
+        _storage.SaveEntity($"companies/{company.Name}", company);
     }
 }
