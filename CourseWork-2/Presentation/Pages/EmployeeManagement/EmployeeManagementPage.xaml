@@ -9,25 +9,28 @@
         <Label Text="Выберите человека" />
         <Picker x:Name="HumanPicker" SelectedIndexChanged="OnHumanSelected" />
 
+        <Entry x:Name="PositionEntry" Placeholder="Введите должность" IsVisible="False" />
+
         <Button x:Name="InviteButton" Text="Пригласить" Clicked="OnInviteClicked" IsVisible="False" />
-        <Button x:Name="DismissButton" Text="Уволить" Clicked="OnDismissClicked" IsVisible="False" />
 
         <Label Text="Сотрудники компании" FontAttributes="Bold" Margin="0,20,0,0" />
 
-        <Grid Padding="10" ColumnDefinitions="Auto,20,*,*">
-            <Label Grid.Column="0" Text="№" FontAttributes="Bold" />
-            <Label Grid.Column="2" Text="Имя" FontAttributes="Bold" />
-            <Label Grid.Column="3" Text="Должность" FontAttributes="Bold" />
+        <Grid Padding="10" ColumnDefinitions="Auto,20,*,*,Auto">
+            <Label Grid.Column="0" Text="№" FontAttributes="Bold" VerticalOptions="Center" />
+            <Label Grid.Column="2" Text="Имя" FontAttributes="Bold" VerticalOptions="Center" />
+            <Label Grid.Column="3" Text="Должность" FontAttributes="Bold" VerticalOptions="Center" />
+            <Label Grid.Column="4" Text="" VerticalOptions="Center" />
         </Grid>
 
         <Frame CornerRadius="10" Padding="0">
-            <CollectionView x:Name="EmployeesCollectionView">
+            <CollectionView x:Name="EmployeesCollectionView" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="10" ColumnDefinitions="Auto,20,*,*">
-                            <Label Grid.Column="0" Text="{Binding Number}" />
-                            <Label Grid.Column="2" Text="{Binding Name}" />
-                            <Label Grid.Column="3" Text="{Binding Position}" />
+                        <Grid Padding="10" ColumnDefinitions="Auto,20,*,*,Auto">
+                            <Label Grid.Column="0" Text="{Binding Number}" VerticalOptions="Center" />
+                            <Label Grid.Column="2" Text="{Binding Name}" VerticalOptions="Center" />
+                            <Label Grid.Column="3" Text="{Binding Position}" VerticalOptions="Center" />
+                            <Button TextColor="Black" BackgroundColor="LightSkyBlue" Grid.Column="4" Text="Посмотреть" Clicked="OnViewClicked" CommandParameter="{Binding UUID}" VerticalOptions="Center" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
