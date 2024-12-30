@@ -2,6 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CourseWork_2.Presentation.Pages.EmployeeManagement.EmployeeManagementPage"
              Title="Управление сотрудниками компании">
+    <ContentPage.Resources>
+    </ContentPage.Resources>
     <StackLayout Padding="30,10" Spacing="20">
         <Label Text="Выберите компанию" />
         <Picker x:Name="CompanyPicker" SelectedIndexChanged="OnCompanySelected" />
@@ -15,14 +17,14 @@
 
         <Label Text="Сотрудники компании" FontAttributes="Bold" Margin="0,20,0,0" />
 
-        <Grid Padding="10" ColumnDefinitions="Auto,20,*,*,Auto">
+        <Grid x:Name="TableGrid" Padding="10" ColumnDefinitions="Auto,20,*,*,Auto">
             <Label Grid.Column="0" Text="№" FontAttributes="Bold" VerticalOptions="Center" />
             <Label Grid.Column="2" Text="Имя" FontAttributes="Bold" VerticalOptions="Center" />
             <Label Grid.Column="3" Text="Должность" FontAttributes="Bold" VerticalOptions="Center" />
             <Label Grid.Column="4" Text="" VerticalOptions="Center" />
         </Grid>
 
-        <Frame CornerRadius="10" Padding="0">
+        <Frame x:Name="TableFrame" CornerRadius="10" Padding="0">
             <CollectionView x:Name="EmployeesCollectionView" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

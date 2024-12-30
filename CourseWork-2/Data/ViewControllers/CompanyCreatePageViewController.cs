@@ -34,7 +34,7 @@ public class CompanyCreatePageViewController
                 return false;
             }
 
-            Company = new Company(name, address, phone, new List<Employee>());
+            Company = new Company(Guid.NewGuid().ToString(), name, address, phone, new List<string>());
 
             Debug.WriteLine("Company entity created successfully.");
             Console.WriteLine("Success");

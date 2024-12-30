@@ -1,7 +1,6 @@
-using CourseWork_2.Data.Service;
 using CourseWork_2.Domain.Models;
+using CourseWork_2.Data.Service;
 using CourseWork_2.Domain.Service;
-using CourseWork_2.Presentation.Util;
 
 namespace CourseWork_2.Data.ViewControllers
 {
@@ -9,7 +8,8 @@ namespace CourseWork_2.Data.ViewControllers
     {
         private readonly LocalStorageService<Company> _companyStorageService = new();
         private readonly LocalStorageService<Human> _humanStorageService = new();
-        private readonly IHRDepartment _hrDepartmentService = new HRDepartmentService();
+        private readonly IHrDepartment _hrDepartmentService = new HrDepartmentService();
+        private readonly ICompanyService _companyService = new LocalCompanyService();
 
         public List<Company>? Companies { get; private set; }
         public List<Human>? Humans { get; private set; }
@@ -28,13 +28,22 @@ namespace CourseWork_2.Data.ViewControllers
 
         public bool IsEmployee(Company company, Human human)
         {
-            return company.Employees.Any(e => e.UUID == human.UUID);
+            return company.EmployeeUUIDs.Contains(human.UUID);
         }
 
         public void InviteEmployee(string position)
         {
             if (SelectedCompany != null && SelectedHuman != null && !IsEmployee(SelectedCompany, SelectedHuman))
             {
+                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                string employeeDirectoryPath = Path.Combine(documentsPath, "employee");
+
+                // Ensure the directory exists
+                if (!Directory.Exists(employeeDirectoryPath))
+                {
+                    Directory.CreateDirectory(employeeDirectoryPath);
+                }
+
                 _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman, position);
             }
         }
@@ -44,24 +53,35 @@ namespace CourseWork_2.Data.ViewControllers
             if (IsEmployee(company, employee))
             {
                 _hrDepartmentService.FireEmployee(company, employee);
+                LoadData();
             }
         }
 
-        private void SaveCompany(Company company)
+        public void GiveReward(Employee employee, Reward reward)
         {
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string directoryPath = Path.Combine(documentsPath, "companies");
-
-            if (!Directory.Exists(directoryPath))
+            try
             {
-                Directory.CreateDirectory(directoryPath);
+                if (SelectedCompany != null)
+                {
+                    bool result = _companyService.RewardEmployee(SelectedCompany, employee, reward);
+                    if (result)
+                    {
+                        Console.WriteLine("Reward successfully given to employee.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to give reward to employee.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("SelectedCompany is null.");
+                }
             }
-
-            string filePath = Path.Combine(directoryPath, $"{company.Name}.json");
-
-            string json = new JsonObjectSerializer().Serialize(company);
-
-            File.WriteAllText(filePath, json);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GiveReward: {ex.Message}");
+            }
         }
     }
 }

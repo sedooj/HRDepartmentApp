@@ -1,101 +1,199 @@
 using CourseWork_2.Data.ViewControllers;
 using CourseWork_2.Domain.Models;
+using System.Diagnostics;
+using CourseWork_2.Data.Service;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
     public partial class EmployeeManagementPage
     {
         private readonly EmployeeManagementPageViewController _controller = new();
-
+        private readonly LocalEmployeeService _employeeService = new();
         public EmployeeManagementPage()
         {
-            InitializeComponent();
-            _controller.LoadData();
-            LoadData();
+            try
+            {
+                InitializeComponent();
+                _controller.LoadData();
+                LoadData();
+                Debug.WriteLine("EmployeeManagementPage initialized successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error initializing EmployeeManagementPage: {ex}");
+            }
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            LoadEmployees();
+            try
+            {
+                LoadEmployees();
+                Debug.WriteLine("OnAppearing executed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in OnAppearing: {ex}");
+            }
         }
 
         public void LoadData()
         {
-            CompanyPicker.ItemsSource = _controller.Companies?.Select(c => c.Name).ToList();
-            if (_controller.SelectedCompany != null)
+            try
             {
-                var employeesUUIDs = _controller.SelectedCompany.Employees.Select(e => e.UUID).ToList();
-                HumanPicker.ItemsSource = _controller.Humans?
-                    .Where(h => !employeesUUIDs.Contains(h.UUID))
-                    .Select(h => h.UserDefaultCredentials.FirstName)
-                    .ToList();
+                var companyNames = _controller.Companies?.Select(c => c.Name).ToList();
+                CompanyPicker.ItemsSource = companyNames;
+                Debug.WriteLine($"Loaded companies: {string.Join(", ", companyNames ?? new List<string>())}");
+
+                if (_controller.SelectedCompany != null)
+                {
+                    var employeeUUIDs = _controller.SelectedCompany.EmployeeUUIDs;
+                    HumanPicker.ItemsSource = _controller.Humans?
+                        .Where(h => !employeeUUIDs.Contains(h.UUID))
+                        .Select(h => h.UserDefaultCredentials.FirstName)
+                        .ToList();
+                }
+                else
+                {
+                    HumanPicker.ItemsSource =
+                        _controller.Humans?.Select(h => h.UserDefaultCredentials.FirstName).ToList();
+                }
+
+                Debug.WriteLine("LoadData executed successfully.");
             }
-            else
+            catch (Exception ex)
             {
-                HumanPicker.ItemsSource = _controller.Humans?.Select(h => h.UserDefaultCredentials.FirstName).ToList();
+                Debug.WriteLine($"Error in LoadData: {ex}");
             }
         }
 
         private void OnCompanySelected(object sender, EventArgs e)
         {
-            _controller.SelectedCompany = _controller.Companies?[CompanyPicker.SelectedIndex];
-            UpdateButtonsVisibility();
-            LoadData();
-            LoadEmployees();
+            try
+            {
+                _controller.SelectedCompany = _controller.Companies?[CompanyPicker.SelectedIndex];
+                TableGrid.IsVisible = _controller.SelectedCompany != null;
+                TableFrame.IsVisible = _controller.SelectedCompany != null;
+                LoadData();
+                LoadEmployees();
+                Debug.WriteLine("OnCompanySelected executed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in OnCompanySelected: {ex}");
+            }
         }
 
         private void OnHumanSelected(object sender, EventArgs e)
         {
-            _controller.SelectedHuman = _controller.Humans?[HumanPicker.SelectedIndex];
-            UpdateButtonsVisibility();
+            try
+            {
+                _controller.SelectedHuman = _controller.Humans?[HumanPicker.SelectedIndex];
+                UpdateButtonsVisibility();
+                Debug.WriteLine("OnHumanSelected executed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in OnHumanSelected: {ex}");
+            }
         }
 
         private void UpdateButtonsVisibility()
         {
-            if (_controller.SelectedCompany != null && _controller.SelectedHuman != null)
+            try
             {
-                bool isEmployee = _controller.IsEmployee(_controller.SelectedCompany, _controller.SelectedHuman);
-                Console.WriteLine(isEmployee);
-                InviteButton.IsVisible = !isEmployee;
-                PositionEntry.IsVisible = !isEmployee;
+                if (_controller.SelectedCompany != null && _controller.SelectedHuman != null)
+                {
+                    bool isEmployee = _controller.IsEmployee(_controller.SelectedCompany, _controller.SelectedHuman);
+                    Console.WriteLine(isEmployee);
+                    InviteButton.IsVisible = !isEmployee;
+                    PositionEntry.IsVisible = !isEmployee;
+                }
+
+                Debug.WriteLine("UpdateButtonsVisibility executed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in UpdateButtonsVisibility: {ex}");
             }
         }
 
         private void OnInviteClicked(object sender, EventArgs e)
         {
-            string position = PositionEntry.Text;
-            _controller.InviteEmployee(position);
-            UpdateButtonsVisibility();
-            LoadEmployees();
-
-            HumanPicker.SelectedIndex = -1;
+            try
+            {
+                string position = PositionEntry.Text;
+                _controller.InviteEmployee(position);
+                UpdateButtonsVisibility();
+                LoadEmployees();
+                HumanPicker.SelectedIndex = -1;
+                Debug.WriteLine("OnInviteClicked executed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in OnInviteClicked: {ex}");
+            }
         }
 
         public void LoadEmployees()
         {
-            if (_controller.SelectedCompany != null)
+            try
             {
-                var employees = _controller.SelectedCompany.Employees.Select((e, index) => new
+                if (_controller.SelectedCompany != null)
                 {
-                    Number = index + 1,
-                    Name = e.UserDefaultCredentials.FirstName,
-                    Position = e.Position,
-                    UUID = e.UUID
-                }).ToList();
+                    var employees = _controller.SelectedCompany.EmployeeUUIDs.Select((uuid, index) =>
+                    {
+                        var human = _controller.Humans?.FirstOrDefault(h => h.UUID == uuid);
+                        return new
+                        {
+                            Number = index + 1,
+                            Name = human?.UserDefaultCredentials.FirstName,
+                            Position = human is Employee employee ? employee.Position : null,
+                            UUID = uuid
+                        };
+                    }).ToList();
 
-                EmployeesCollectionView.ItemsSource = employees;
+                    EmployeesCollectionView.ItemsSource = employees;
+                }
+
+                Debug.WriteLine("LoadEmployees executed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in LoadEmployees: {ex}");
             }
         }
 
-        private async void OnViewClicked(object sender, EventArgs e)
+        private void OnViewClicked(object sender, EventArgs e)
         {
-            var button = sender as Button;
-            var employeeUUID = button?.CommandParameter as string;
-            var employee = _controller.SelectedCompany?.Employees.FirstOrDefault(e => e.UUID == employeeUUID);
-            if (employee != null)
+            try
             {
-                await Navigation.PushAsync(new EmployeePage(_controller.SelectedCompany, employee, _controller));
+                Debug.WriteLine("OnViewClicked started.");
+                var button = sender as Button;
+                var employeeUuid = button?.CommandParameter as string;
+                if (employeeUuid == null)
+                {
+                    Debug.WriteLine("Employee UUID is null.");
+                    return;
+                }
+
+                Debug.WriteLine($"Employee UUID: {employeeUuid}");
+                var employee = _employeeService.GetEmployeeByUUID(employeeUuid);
+                if (employee == null)
+                {
+                    Debug.WriteLine("Employee not found.");
+                    return;
+                }
+
+                Debug.WriteLine($"Employee found: {employee.UserDefaultCredentials.FirstName} {employee.UserDefaultCredentials.LastName}");
+                _controller.SelectedHuman = employee;
+                Navigation.PushAsync(new EmployeePage(_controller.SelectedCompany, employee, _controller, _controller.SelectedCompany.Name));
+                Debug.WriteLine("OnViewClicked executed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in OnViewClicked: {ex}");
             }
         }
     }
