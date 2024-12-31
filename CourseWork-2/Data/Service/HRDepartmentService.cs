@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Domain.Service;
 using CourseWork_2.Presentation.Util;
@@ -16,54 +17,38 @@ public class HrDepartmentService : IHrDepartment
         {
             company.EmployeeUUIDs.Add(human.UUID);
             SaveCompany(company);
-            List<EmploymentHistoryRecord> employmentHistory = human.EmploymentHistoryRecords;
-            if (employmentHistory.Count == 0)
-            {
-                employmentHistory = new List<EmploymentHistoryRecord>
-                {
-                    new EmploymentHistoryRecord(
-                        degree: EmploymentHistoryRecord.AcademicDegree.NoDegree,
-                        rank: EmploymentHistoryRecord.AcademicRank.NoRank,
-                        workingEndDate: null,
-                        workingStartDate: DateTime.Now,
-                        companyUuid: company.UUID,
-                        dismissReason: "",
-                        positionAtWork: position,
-                        rewards: new List<Reward>(),
-                        careerMoves: new List<CareerMove>(),
-                        startEmploymentPosition: position,
-                        punishments: new List<Punishment>())
-                };
-            }
-            else
-            {
-                employmentHistory.Add(new EmploymentHistoryRecord(
-                    degree: EmploymentHistoryRecord.AcademicDegree.NoDegree,
-                    rank: EmploymentHistoryRecord.AcademicRank.NoRank,
-                    workingEndDate: null,
-                    workingStartDate: DateTime.Now,
-                    companyUuid: company.UUID,
-                    dismissReason: "",
-                    positionAtWork: position,
-                    rewards: new List<Reward>(),
-                    careerMoves: new List<CareerMove>(),
-                    startEmploymentPosition: position,
-                    punishments: new List<Punishment>()));
-            }
 
-            _employeeService.SaveEmployee(
-                new Employee(uuid: human.UUID,
-                    companyUuid: company.UUID,
-                    passport: human.Passport,
-                    userDefaultCredentials: human.UserDefaultCredentials,
-                    employmentHistoryRecords: employmentHistory,
-                    education: human.Education,
-                    educationDocument: human.EducationDocument,
-                    position: position));
+            var employmentHistory = human.EmploymentHistoryRecords;
+            Debug.WriteLine(employmentHistory.Count);
+
+            employmentHistory.Add(new EmploymentHistoryRecord(
+                degree: EmploymentHistoryRecord.AcademicDegree.NoDegree,
+                rank: EmploymentHistoryRecord.AcademicRank.NoRank,
+                workingEndDate: null,
+                workingStartDate: DateTime.Now,
+                companyUuid: company.UUID,
+                fireReason: "",
+                positionAtWork: position,
+                rewards: new List<Reward>(),
+                careerMoves: new List<CareerMove>(),
+                startEmploymentPosition: position,
+                punishments: new List<Punishment>()));
+            Debug.WriteLine(employmentHistory.Count);
+            human.EmploymentHistoryRecords = employmentHistory;
+
+            _employeeService.SaveEmployee(new Employee(
+                uuid: human.UUID,
+                companyUuid: company.UUID,
+                passport: human.Passport,
+                userDefaultCredentials: human.UserDefaultCredentials,
+                employmentHistoryRecords: employmentHistory,
+                education: human.Education,
+                educationDocument: human.EducationDocument,
+                position: position));
         }
     }
-
-    public void FireEmployee(Company company, Human human)
+    
+    public void FireEmployee(Company company, Human human, string fireReason)
     {
         var employee = company.EmployeeUUIDs.FirstOrDefault(e => e == human.UUID);
         if (employee == null) return;
@@ -71,7 +56,12 @@ public class HrDepartmentService : IHrDepartment
         Console.WriteLine("Firing employee");
         SaveCompany(company);
         var employeeByUuid = _employeeService.GetEmployeeByUUID(human.UUID);
-        if (employeeByUuid != null) employeeByUuid.CompanyUUID = null;
+        if (employeeByUuid == null) return;
+        List<EmploymentHistoryRecord> historyRecords = employeeByUuid.EmploymentHistoryRecords;
+        var employmentHistoryRecord = historyRecords.Last();
+        employmentHistoryRecord.WorkingEndDate = DateTime.Now;
+        employmentHistoryRecord.FireReason = fireReason;
+        _employeeService.SaveEmployee(employeeByUuid);
     }
 
     public List<EmploymentHistoryRecord> GetEmployeeWorkbook(Human human)

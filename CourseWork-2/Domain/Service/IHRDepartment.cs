@@ -5,6 +5,6 @@ namespace CourseWork_2.Domain.Service;
 public interface IHrDepartment
 {
     void InviteEmployee(Company company, Human human, string position);
-    void FireEmployee(Company company, Human human);
+    void FireEmployee(Company company, Human human, string fireReason);
     List<EmploymentHistoryRecord> GetEmployeeWorkbook(Human human);
 }

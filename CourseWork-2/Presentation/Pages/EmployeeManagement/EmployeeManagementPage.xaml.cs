@@ -38,7 +38,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
-        public void LoadData()
+        private void LoadData()
         {
             try
             {
@@ -46,19 +46,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 CompanyPicker.ItemsSource = companyNames;
                 Debug.WriteLine($"Loaded companies: {string.Join(", ", companyNames ?? new List<string>())}");
 
-                if (_controller.SelectedCompany != null)
-                {
-                    var employeeUUIDs = _controller.SelectedCompany.EmployeeUUIDs;
-                    HumanPicker.ItemsSource = _controller.Humans?
-                        .Where(h => !employeeUUIDs.Contains(h.UUID))
-                        .Select(h => h.UserDefaultCredentials.FirstName)
-                        .ToList();
-                }
-                else
-                {
-                    HumanPicker.ItemsSource =
-                        _controller.Humans?.Select(h => h.UserDefaultCredentials.FirstName).ToList();
-                }
+                HumanPicker.ItemsSource = _controller.Humans?.Select(h => h.UserDefaultCredentials.FirstName).ToList();
 
                 Debug.WriteLine("LoadData executed successfully.");
             }
@@ -89,9 +77,16 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
         {
             try
             {
-                _controller.SelectedHuman = _controller.Humans?[HumanPicker.SelectedIndex];
-                UpdateButtonsVisibility();
-                Debug.WriteLine("OnHumanSelected executed successfully.");
+                if (HumanPicker.SelectedIndex >= 0 && HumanPicker.SelectedIndex < _controller.Humans?.Count)
+                {
+                    _controller.SelectedHuman = _controller.Humans?[HumanPicker.SelectedIndex];
+                    UpdateButtonsVisibility();
+                    Debug.WriteLine("OnHumanSelected executed successfully.");
+                }
+                else
+                {
+                    Debug.WriteLine("Invalid HumanPicker.SelectedIndex.");
+                }
             }
             catch (Exception ex)
             {
@@ -136,7 +131,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
-        public void LoadEmployees()
+        private void LoadEmployees()
         {
             try
             {
@@ -144,12 +139,12 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 {
                     var employees = _controller.SelectedCompany.EmployeeUUIDs.Select((uuid, index) =>
                     {
-                        var human = _controller.Humans?.FirstOrDefault(h => h.UUID == uuid);
+                        var employee = _employeeService.GetEmployeeByUUID(uuid);
                         return new
                         {
                             Number = index + 1,
-                            Name = human?.UserDefaultCredentials.FirstName,
-                            Position = human is Employee employee ? employee.Position : null,
+                            Name = employee?.UserDefaultCredentials.FirstName,
+                            Position = employee?.Position,
                             UUID = uuid
                         };
                     }).ToList();
@@ -188,7 +183,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 
                 Debug.WriteLine($"Employee found: {employee.UserDefaultCredentials.FirstName} {employee.UserDefaultCredentials.LastName}");
                 _controller.SelectedHuman = employee;
-                Navigation.PushAsync(new EmployeePage(_controller.SelectedCompany, employee, _controller, _controller.SelectedCompany.Name));
+                Navigation.PushAsync(new EmployeePage(_controller.SelectedCompany, employee, _controller));
                 Debug.WriteLine("OnViewClicked executed successfully.");
             }
             catch (Exception ex)

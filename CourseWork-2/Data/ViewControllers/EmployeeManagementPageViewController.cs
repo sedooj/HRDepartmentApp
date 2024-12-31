@@ -48,11 +48,11 @@ namespace CourseWork_2.Data.ViewControllers
             }
         }
 
-        public void FireEmployee(Company company, Employee employee)
+        public void FireEmployee(Company company, Employee employee, string fireReason)
         {
             if (IsEmployee(company, employee))
             {
-                _hrDepartmentService.FireEmployee(company, employee);
+                _hrDepartmentService.FireEmployee(company, employee, fireReason);
                 LoadData();
             }
         }
