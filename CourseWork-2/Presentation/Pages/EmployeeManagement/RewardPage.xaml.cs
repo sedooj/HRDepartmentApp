@@ -5,10 +5,10 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
     public partial class RewardPage
     {
-        private readonly Employee _employee;
+        private readonly Human _employee;
         private readonly EmployeeManagementPageViewController _controller;
 
-        public RewardPage(Employee employee, EmployeeManagementPageViewController controller)
+        public RewardPage(Human employee, EmployeeManagementPageViewController controller)
         {
             InitializeComponent();
             _employee = employee;
@@ -25,6 +25,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                     await DisplayAlert("Ошибка", "Выберите награду", "OK");
                     return;
                 }
+
                 var selectedType = (Reward.RewardType)RewardTypePicker.SelectedIndex;
 
                 var reward = new Reward(type: selectedType);

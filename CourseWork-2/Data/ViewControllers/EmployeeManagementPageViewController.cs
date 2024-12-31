@@ -15,7 +15,7 @@ namespace CourseWork_2.Data.ViewControllers
         public List<Human>? Humans { get; private set; }
         public Company? SelectedCompany { get; set; }
         public Human? SelectedHuman { get; set; }
-
+        
         public void LoadData()
         {
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
@@ -26,20 +26,20 @@ namespace CourseWork_2.Data.ViewControllers
             Humans = _humanStorageService.LoadEntities(humanDirectoryPath).ToList();
         }
 
-        public bool IsEmployee(Company company, Human human)
+        public bool IsEmployee(Company company, string humanUuid)
         {
-            return company.EmployeeUUIDs.Contains(human.UUID);
+            return company.EmployeeUUIDs.Contains(humanUuid);
         }
 
         public void InviteEmployee(string position)
         {
-            if (SelectedCompany != null && SelectedHuman != null && !IsEmployee(SelectedCompany, SelectedHuman))
+            if (SelectedCompany != null && SelectedHuman != null && !IsEmployee(SelectedCompany, SelectedHuman.UUID))
             {
-                _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman, position);
+                _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman.UUID, position);
             }
         }
 
-        public void FireEmployee(Company company, Employee employee, string fireReason)
+        public void FireEmployee(Company company, string employee, string fireReason)
         {
             if (IsEmployee(company, employee))
             {
@@ -47,7 +47,7 @@ namespace CourseWork_2.Data.ViewControllers
             }
         }
 
-        public void GiveReward(Employee employee, Reward reward)
+        public void GiveReward(Human employee, Reward reward)
         {
             try
             {
@@ -71,6 +71,33 @@ namespace CourseWork_2.Data.ViewControllers
             catch (Exception ex)
             {
                 Console.WriteLine($"Error in GiveReward: {ex.Message}");
+            }
+        }
+        
+        public void PunishEmployee(Human employee, Punishment punishment)
+        {
+            try
+            {
+                if (SelectedCompany != null)
+                {
+                    bool result = _companyService.PunishEmployee(SelectedCompany, employee, punishment);
+                    if (result)
+                    {
+                        Console.WriteLine("Punishment successfully given to employee.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to give punishment to employee.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("SelectedCompany is null.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in PunishEmployee: {ex.Message}");
             }
         }
     }

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Domain.Service;
+using CourseWork_2.Presentation.Util;
 
 namespace CourseWork_2.Data.Service;
 
@@ -8,9 +9,8 @@ public class LocalCompanyService : ICompanyService
 {
     private readonly LocalStorageService<Company> _storage = new();
     private readonly LocalStorageService<Human> _humanService = new();
-    private readonly LocalEmployeeService _employeeService = new();
 
-    public bool RewardEmployee(Company company, Employee employee, Reward reward)
+    public bool RewardEmployee(Company company, Human employee, Reward reward)
     {
         try
         {
@@ -24,7 +24,7 @@ public class LocalCompanyService : ICompanyService
                 employee.EmploymentHistoryRecords.Last().Rewards.Add(reward);
                 Debug.Print("Employee has employment history");
             }
-            _employeeService.SaveEmployee(employee);
+            _humanService.SaveEntity($"{Config.HumanStoragePath}{employee.UUID}", employee);
             return true;
         }
         catch (Exception ex)
@@ -43,11 +43,11 @@ public class LocalCompanyService : ICompanyService
         return true;
     }
 
-    private Employee? GetEmployee(Company company, string uuid)
+    private Human? GetEmployee(Company company, string uuid)
     {
         if (company.EmployeeUUIDs.Exists(e => e == uuid))
         {
-            return _humanService.LoadEntity($"humans/{uuid}") as Employee;
+            return _humanService.LoadEntity($"{Config.HumanStoragePath}/{uuid}");
         }
 
         return null;

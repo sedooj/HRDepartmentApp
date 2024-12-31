@@ -9,15 +9,19 @@ public class HrDepartmentService : IHrDepartment
 {
     private readonly LocalStorageService<Company> _companyStorageService = new();
     private readonly LocalStorageService<Human> _humanStorageService = new();
-    private readonly LocalEmployeeService _employeeService = new();
 
 
-    public void InviteEmployee(Company company, Human human, string position)
+    public void InviteEmployee(Company company, string humanUuid, string position)
     {
-        company.EmployeeUUIDs.Add(human.UUID);
-        _companyStorageService.UpdateEntity($"companies/{company.Name}", company);
-
-        var employmentHistory = human.EmploymentHistoryRecords;
+        company.EmployeeUUIDs.Add(humanUuid);
+        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Name}", company);
+        var human = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{humanUuid}");
+        if (human == null)
+        {
+            Debug.WriteLine("Human is null");
+            return;
+        }
+        var employmentHistory = new List<EmploymentHistoryRecord>(human.EmploymentHistoryRecords);
         employmentHistory.Add(new EmploymentHistoryRecord(
             degree: EmploymentHistoryRecord.AcademicDegree.NoDegree,
             rank: EmploymentHistoryRecord.AcademicRank.NoRank,
@@ -30,47 +34,24 @@ public class HrDepartmentService : IHrDepartment
             careerMoves: new List<CareerMove>(),
             startEmploymentPosition: position,
             punishments: new List<Punishment>()));
-        _humanStorageService.UpdateEntity($"humans/{human.UUID}", human);
-        
-        Debug.WriteLine(employmentHistory.Count);
-
-        var existingEmployee = _employeeService.GetEmployeeByUuid(human.UUID);
-        if (existingEmployee != null)
-        {
-            Debug.WriteLine("Employee has been found, updating");
-            existingEmployee.EmploymentHistoryRecords = employmentHistory;
-            existingEmployee.Position = position;
-            _employeeService.UpdateEmployee(existingEmployee);
-        }
-        else
-        {
-            Debug.WriteLine("Employee not found, creating new");
-            _employeeService.SaveEmployee(new Employee(
-                uuid: human.UUID,
-                companyUuid: company.UUID,
-                passport: human.Passport,
-                userDefaultCredentials: human.UserDefaultCredentials,
-                employmentHistoryRecords: employmentHistory,
-                education: human.Education,
-                educationDocument: human.EducationDocument,
-                position: position));
-        }
+        human.EmploymentHistoryRecords = employmentHistory;
+        _humanStorageService.UpdateEntity($"{Config.HumanStoragePath}{human.UUID}", human);
     }
-    
-    public void FireEmployee(Company company, Human human, string fireReason)
+
+    public void FireEmployee(Company company, string humanUuid, string fireReason)
     {
-        var employee = company.EmployeeUUIDs.FirstOrDefault(e => e == human.UUID);
-        if (employee == null) return;
-        company.EmployeeUUIDs.Remove(employee);
+        company.EmployeeUUIDs.Remove(humanUuid);
         Console.WriteLine("Firing employee");
-        SaveCompany(company);
-        var employeeByUuid = _employeeService.GetEmployeeByUuid(human.UUID);
-        if (employeeByUuid == null) return;
-        List<EmploymentHistoryRecord> historyRecords = employeeByUuid.EmploymentHistoryRecords;
-        var employmentHistoryRecord = historyRecords.Last();
-        employmentHistoryRecord.WorkingEndDate = DateTime.Now;
-        employmentHistoryRecord.FireReason = fireReason;
-        _employeeService.SaveEmployee(employeeByUuid);
+        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Name}", company);
+        var human = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{humanUuid}");
+        if (human == null)
+        {
+            Debug.WriteLine("Human is null in FireEmployee");
+            return;
+        }
+        human.EmploymentHistoryRecords.Last().WorkingEndDate = DateTime.Now;
+        human.EmploymentHistoryRecords.Last().FireReason = fireReason;
+        _humanStorageService.UpdateEntity($"{Config.HumanStoragePath}{humanUuid}", human);
     }
 
     public List<EmploymentHistoryRecord> GetEmployeeWorkbook(Human human)
@@ -81,29 +62,12 @@ public class HrDepartmentService : IHrDepartment
             var employee = company.EmployeeUUIDs.FirstOrDefault(e => e == human.UUID);
             if (employee != null)
             {
-                var employeeEntity = _employeeService.GetEmployeeByUuid(human.UUID);
+                var employeeEntity = _humanStorageService.LoadEntity(human.UUID);
                 if (employeeEntity == null) return new List<EmploymentHistoryRecord>();
                 return employeeEntity.EmploymentHistoryRecords;
             }
         }
 
         return new List<EmploymentHistoryRecord>();
-    }
-    
-    private void SaveCompany(Company company)
-    {
-        string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        string directoryPath = Path.Combine(documentsPath, "companies");
-
-        if (!Directory.Exists(directoryPath))
-        {
-            Directory.CreateDirectory(directoryPath);
-        }
-
-        string filePath = Path.Combine(directoryPath, $"{company.Name}.json");
-
-        string json = new JsonObjectSerializer().Serialize(company);
-
-        File.WriteAllText(filePath, json);
     }
 }

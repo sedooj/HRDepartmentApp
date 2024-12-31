@@ -5,21 +5,21 @@ using System.Linq;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
-    public partial class EmployeePage : ContentPage
+    public partial class EmployeePage
     {
-        private readonly Company? _company;
-        private readonly Employee? _employee;
-        private readonly EmployeeManagementPageViewController? _controller;
+        private Company _company;
+        private Human _employee;
+        private readonly EmployeeManagementPageViewController _controller;
 
-        public EmployeePage(Company company, Employee employee, EmployeeManagementPageViewController controller)
+        public EmployeePage(Company company, Human employee, EmployeeManagementPageViewController controller)
         {
-            InitializeComponent();
             _company = company;
             _employee = employee;
             _controller = controller;
+            InitializeComponent();
 
             Title = _employee.UserDefaultCredentials.FirstName + " " +
-                    _employee.UserDefaultCredentials.LastName + " – " + _employee.Position;
+                    _employee.UserDefaultCredentials.LastName + " – " + _employee.EmploymentHistoryRecords.Last().PositionAtWork;
             BindingContext = this;
 
             try
@@ -30,7 +30,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                     {
                         Index = index + 1,
                         record.PositionAtWork,
-                        WorkingPeriod = $"{record.WorkingStartDate:yyyy-MM-dd} - {(record.WorkingEndDate.HasValue ? record.WorkingEndDate.Value.ToString("dd-mm-yyyy") : " Нынешнее время")}"
+                        WorkingPeriod = $"{record.WorkingStartDate:yyyy-MM-dd} - {(record.WorkingEndDate.HasValue ? record.WorkingEndDate.Value.ToString("DD-MM-YYYY") : " Нынешнее время")}"
                     }).ToList();
                 Debug.WriteLine("EmployeePage initialized successfully.");
             }
@@ -73,7 +73,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 string fireReason = await DisplayPromptAsync("Уволить сотрудника", "Пожалуйста, укажите причину увольнения сотрудника:");
                 if (!string.IsNullOrEmpty(fireReason))
                 {
-                    _controller.FireEmployee(_company, _employee, fireReason);
+                    _controller.FireEmployee(_company, _employee.UUID, fireReason);
                     await Navigation.PopAsync();
 
                     Debug.WriteLine("OnFireClicked executed successfully.");
@@ -89,7 +89,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
-        private async void OnViewDetailsClicked(object sender, EventArgs e)
+        private void OnViewDetailsClicked(object sender, EventArgs e)
         {
             try
             {

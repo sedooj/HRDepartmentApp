@@ -2,13 +2,14 @@ using CourseWork_2.Data.ViewControllers;
 using CourseWork_2.Domain.Models;
 using System.Diagnostics;
 using CourseWork_2.Data.Service;
+using CourseWork_2.Presentation.Util;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
     public partial class EmployeeManagementPage
     {
         private readonly EmployeeManagementPageViewController _controller = new();
-        private readonly LocalEmployeeService _employeeService = new();
+        private readonly LocalStorageService<Human> _humanStorageService = new();
         public EmployeeManagementPage()
         {
             try
@@ -100,7 +101,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             {
                 if (_controller.SelectedCompany != null && _controller.SelectedHuman != null)
                 {
-                    bool isEmployee = _controller.IsEmployee(_controller.SelectedCompany, _controller.SelectedHuman);
+                    bool isEmployee = _controller.IsEmployee(_controller.SelectedCompany, _controller.SelectedHuman.UUID);
                     Console.WriteLine(isEmployee);
                     InviteButton.IsVisible = !isEmployee;
                     PositionEntry.IsVisible = !isEmployee;
@@ -139,12 +140,12 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 {
                     var employees = _controller.SelectedCompany.EmployeeUUIDs.Select((uuid, index) =>
                     {
-                        var employee = _employeeService.GetEmployeeByUuid(uuid);
+                        var employee = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{uuid}");
                         return new
                         {
                             Number = index + 1,
-                            Name = employee?.UserDefaultCredentials.FirstName,
-                            Position = employee?.Position,
+                            Name = employee?.UserDefaultCredentials.FirstName + employee?.UserDefaultCredentials.LastName,
+                            Position = employee?.EmploymentHistoryRecords.Last().PositionAtWork,
                             UUID = uuid
                         };
                     }).ToList();
@@ -160,7 +161,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
-        private void OnViewClicked(object sender, EventArgs e)
+        private async void OnViewClicked(object sender, EventArgs e)
         {
             try
             {
@@ -174,7 +175,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 }
 
                 Debug.WriteLine($"Employee UUID: {employeeUuid}");
-                var employee = _employeeService.GetEmployeeByUuid(employeeUuid);
+                var employee = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
                 if (employee == null)
                 {
                     Debug.WriteLine("Employee not found.");
@@ -182,8 +183,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 }
 
                 Debug.WriteLine($"Employee found: {employee.UserDefaultCredentials.FirstName} {employee.UserDefaultCredentials.LastName}");
-                _controller.SelectedHuman = employee;
-                Navigation.PushAsync(new EmployeePage(_controller.SelectedCompany, employee, _controller));
+                await Navigation.PushAsync(new EmployeePage(_controller.SelectedCompany, employee, _controller));
                 Debug.WriteLine("OnViewClicked executed successfully.");
             }
             catch (Exception ex)
