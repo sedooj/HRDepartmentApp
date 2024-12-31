@@ -7,54 +7,33 @@ namespace CourseWork_2.Data.Service;
 
 public class LocalCompanyService : ICompanyService
 {
-    private readonly LocalStorageService<Company> _storage = new();
     private readonly LocalStorageService<Human> _humanService = new();
 
-    public bool RewardEmployee(Company company, Human employee, Reward reward)
+    public bool RewardEmployee(string employeeUuid, Reward reward)
     {
-        try
+        var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
+        if (employee == null)
         {
-            if (employee.EmploymentHistoryRecords.Count == 0)
-            {
-                employee.EmploymentHistoryRecords.Last().Rewards.Add(reward);
-                Debug.Print("Employee has no employment history");
-            }
-            else
-            {
-                employee.EmploymentHistoryRecords.Last().Rewards.Add(reward);
-                Debug.Print("Employee has employment history");
-            }
-            _humanService.SaveEntity($"{Config.HumanStoragePath}{employee.UUID}", employee);
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error in RewardEmployee: {ex.Message}");
+            Debug.WriteLine("Can't give reward to employee: employee not found");
             return false;
         }
-    }
 
-    public bool PunishEmployee(Company company, Human human, Punishment punishment)
-    {
-        var employee = GetEmployee(company, human.UUID);
-        if (employee == null) return false;
-        employee.EmploymentHistoryRecords.Last().Punishments.Add(punishment);
-        SaveCompany(company);
+        employee.EmploymentHistoryRecords.Last().Rewards.Add(reward);
+        _humanService.SaveEntity($"{Config.HumanStoragePath}{employee.UUID}", employee);
         return true;
     }
 
-    private Human? GetEmployee(Company company, string uuid)
+    public bool PunishEmployee(string humanUuid, Punishment punishment)
     {
-        if (company.EmployeeUUIDs.Exists(e => e == uuid))
+        var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{humanUuid}");
+        if (employee == null)
         {
-            return _humanService.LoadEntity($"{Config.HumanStoragePath}/{uuid}");
+            Debug.WriteLine("Can't punish employee: employee not found");
+            return false;
         }
-
-        return null;
+        employee.EmploymentHistoryRecords.Last().Punishments.Add(punishment);
+        _humanService.UpdateEntity($"{Config.HumanStoragePath}{humanUuid}", employee);
+        return true;
     }
 
-    private void SaveCompany(Company company)
-    {
-        _storage.SaveEntity($"companies/{company.Name}", company);
-    }
 }

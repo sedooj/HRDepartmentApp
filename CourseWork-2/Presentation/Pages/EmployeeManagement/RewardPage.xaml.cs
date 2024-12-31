@@ -28,7 +28,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 
                 var selectedType = (Reward.RewardType)RewardTypePicker.SelectedIndex;
 
-                var reward = new Reward(type: selectedType);
+                var reward = new Reward(type: selectedType, date: DateTime.Now);
                 _controller.GiveReward(_employee, reward);
 
                 Console.WriteLine("Reward successfully added.");

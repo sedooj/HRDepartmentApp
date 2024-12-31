@@ -3,17 +3,23 @@ namespace CourseWork_2.Domain.Models;
 public sealed class Punishment
 {
     private PunishmentType _type;
-    private long _id;
-    private long _date;
+    private DateTime _date;
 
-    public PunishmentType Type => _type;
-    public long Id => _id;
-    public long Date => _date;
+    public PunishmentType Type
+    {
+        get => _type;
+        set => _type = value;
+    }
 
-    public Punishment(PunishmentType type, long id, long date)
+    public DateTime Date
+    {
+        get => _date;
+        set => _date = value;
+    }
+
+    public Punishment(PunishmentType type, DateTime date)
     {
         _type = type;
-        _id = id;
         _date = date;
     }
 

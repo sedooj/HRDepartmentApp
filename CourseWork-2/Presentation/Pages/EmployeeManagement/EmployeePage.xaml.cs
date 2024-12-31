@@ -31,7 +31,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                     {
                         Index = index + 1,
                         record.PositionAtWork,
-                        WorkingPeriod = $"{record.WorkingStartDate:yyyy-MM-dd} - {(record.WorkingEndDate.HasValue ? record.WorkingEndDate.Value.ToString("DD-MM-YYYY") : " Нынешнее время")}"
+                        WorkingPeriod = $"{record.WorkingStartDate:dd-MM-yyyy} - {(record.WorkingEndDate.HasValue ? record.WorkingEndDate.Value.ToString("dd-MM-yyyy") : " Нынешнее время")}"
                     }).ToList();
                 Debug.WriteLine("EmployeePage initialized successfully.");
             }
@@ -54,11 +54,11 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
-        private void OnPunishClicked(object sender, EventArgs e)
+        private async void OnPunishClicked(object sender, EventArgs e)
         {
             try
             {
-                // Handle punish logic here
+                await Navigation.PushAsync(new PunishmentPage(_employee, _controller));
                 Debug.WriteLine("OnPunishClicked executed successfully.");
             }
             catch (Exception ex)

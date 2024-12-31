@@ -2,10 +2,25 @@ namespace CourseWork_2.Domain.Models;
 
 public sealed class Reward
 {
-    public RewardType Type { get; }
-    public Reward(RewardType type)
+    private DateTime _date;
+    private RewardType _type;
+
+    public DateTime Date
     {
-        Type = type;
+        get => _date;
+        set => _date = value;
+    }
+
+    public RewardType Type
+    {
+        get => _type;
+        set => _type = value;
+    }
+
+    public Reward(RewardType type, DateTime date)
+    {
+        _type = type;
+        _date = date;
     }
 
     public enum RewardType

@@ -53,7 +53,7 @@ namespace CourseWork_2.Data.ViewControllers
             {
                 if (SelectedCompany != null)
                 {
-                    bool result = _companyService.RewardEmployee(SelectedCompany, employee, reward);
+                    bool result = _companyService.RewardEmployee(employee.UUID, reward);
                     if (result)
                     {
                         Console.WriteLine("Reward successfully given to employee.");
@@ -80,7 +80,7 @@ namespace CourseWork_2.Data.ViewControllers
             {
                 if (SelectedCompany != null)
                 {
-                    bool result = _companyService.PunishEmployee(SelectedCompany, employee, punishment);
+                    bool result = _companyService.PunishEmployee(employee.UUID, punishment);
                     if (result)
                     {
                         Console.WriteLine("Punishment successfully given to employee.");
