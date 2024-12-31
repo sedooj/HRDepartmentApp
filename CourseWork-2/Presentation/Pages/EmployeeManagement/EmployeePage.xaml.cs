@@ -31,7 +31,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                     {
                         Index = index + 1,
                         record.PositionAtWork,
-                        WorkingPeriod = $"{record.WorkingStartDate:dd-MM-yyyy} - {(record.WorkingEndDate.HasValue ? record.WorkingEndDate.Value.ToString("dd-MM-yyyy") : " Нынешнее время")}"
+                        WorkingPeriod = $"{record.WorkingStartDate:dd-MM-yyyy} - {(record.WorkingEndDate.HasValue ? record.WorkingEndDate.Value.ToString("dd.MM.yyyy") : " Нынешнее время")}"
                     }).ToList();
                 Debug.WriteLine("EmployeePage initialized successfully.");
             }
@@ -90,15 +90,17 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
-        private void OnViewDetailsClicked(object sender, EventArgs e)
+        private async void OnViewDetailsClicked(object sender, EventArgs e)
         {
             try
             {
                 var button = sender as Button;
-                var record = button?.CommandParameter as EmploymentHistoryRecord;
-                if (record != null)
+                if (button?.CommandParameter is int index)
                 {
-                    // await Navigation.PushAsync(new EmploymentHistoryDetailPage(record));
+                    var record = _employee.EmploymentHistoryRecords.ElementAtOrDefault(index - 1);
+                    if (record == null) return;
+                    await Navigation.PushAsync(new EmployeeDetailsPage(record));
+                    Debug.WriteLine("OnViewDetailsClicked executed successfully.");
                 }
             }
             catch (Exception ex)

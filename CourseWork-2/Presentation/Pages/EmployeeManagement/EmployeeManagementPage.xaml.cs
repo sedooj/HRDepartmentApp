@@ -144,7 +144,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                         return new
                         {
                             Number = index + 1,
-                            Name = employee?.UserDefaultCredentials.FirstName + employee?.UserDefaultCredentials.LastName,
+                            Name = employee?.UserDefaultCredentials.FirstName + " "+ employee?.UserDefaultCredentials.LastName,
                             Position = employee?.EmploymentHistoryRecords.Last().PositionAtWork,
                             UUID = uuid
                         };

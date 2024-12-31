@@ -12,14 +12,26 @@
 
             <Label Text="Электронная трудовая книга" FontAttributes="Bold" Margin="0,20,0,0" />
 
-            <CollectionView x:Name="EmploymentHistoryCollectionView" SelectionMode="None">
+            <CollectionView x:Name="EmploymentHistoryCollectionView">
+                <CollectionView.Header>
+                    <Grid Padding="10" ColumnDefinitions="Auto,20,*,*,*,Auto">
+                        <Label Text="№" FontAttributes="Bold" />
+                        <Label Text="" Grid.Column="1" />
+                        <Label Text="Должность" FontAttributes="Bold" Grid.Column="2" />
+                        <Label Text="Период работы" FontAttributes="Bold" Grid.Column="3" />
+                        <Label Text="Компания" FontAttributes="Bold" Grid.Column="4" />
+                        <Label Text="Действия" FontAttributes="Bold" Grid.Column="5" />
+                    </Grid>
+                </CollectionView.Header>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="10" ColumnDefinitions="Auto,*,*,Auto">
-                            <Label Grid.Column="0" Text="{Binding Index}" VerticalOptions="Center" Margin="0,0,10,0" />
-                            <Label Grid.Column="1" Text="{Binding PositionAtWork}" VerticalOptions="Center" />
-                            <Label Grid.Column="2" Text="{Binding WorkingPeriod}" VerticalOptions="Center" Margin="10,0,0,0" />
-                            <Button Grid.Column="3" Text="Детали" Clicked="OnViewDetailsClicked" CommandParameter="{Binding .}" />
+                        <Grid Padding="10" ColumnDefinitions="Auto,20,*,*,*,Auto">
+                            <Label Text="{Binding Index}" />
+                            <Label Text="" Grid.Column="1" />
+                            <Label Text="{Binding PositionAtWork}" Grid.Column="2" />
+                            <Label Text="{Binding WorkingPeriod}" Grid.Column="3" />
+                            <Label Text="{Binding CompanyUuid}" Grid.Column="4" />
+                            <Button Text="Подробнее" CommandParameter="{Binding Index}" Clicked="OnViewDetailsClicked" Grid.Column="5" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

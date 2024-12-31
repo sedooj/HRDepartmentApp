@@ -1,0 +1,30 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CourseWork_2.Presentation.Pages.EmployeeManagement.EmployeeDetailsPage"
+             Title="Детали записи о трудовой деятельности">
+    <StackLayout Padding="30,10" Spacing="20">
+        <Label Text="Должность:" />
+        <Label Text="{Binding PositionAtWork}" />
+
+        <Label Text="Дата начала работы:" />
+        <Label Text="{Binding WorkingStartDate, StringFormat='{0:dd.MM.yyyy}'}" />
+
+        <Label Text="Дата окончания работы:" />
+        <Label Text="{Binding WorkingEndDate, StringFormat='{0:dd.MM.yyyy}'}" />
+
+        <Label Text="Компания:" />
+        <Label Text="{Binding CompanyUuid}" />
+
+        <Label Text="Причина увольнения:" />
+        <Label Text="{Binding FireReason}" />
+
+        <Label Text="Награды:" />
+        <Label Text="{Binding Rewards.Count}" />
+
+        <Label Text="Карьера:" />
+        <Label Text="{Binding CareerMoves.Count}" />
+
+        <Label Text="Наказания:" />
+        <Label Text="{Binding Punishments.Count}" />
+    </StackLayout>
+</ContentPage>
