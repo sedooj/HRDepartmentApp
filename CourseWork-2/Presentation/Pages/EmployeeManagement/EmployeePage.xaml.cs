@@ -22,6 +22,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                     _employee.UserDefaultCredentials.LastName + " – " + _employee.EmploymentHistoryRecords.Last().PositionAtWork;
             BindingContext = this;
 
+            
             try
             {
                 Debug.WriteLine("Initializing EmployeePage...");
