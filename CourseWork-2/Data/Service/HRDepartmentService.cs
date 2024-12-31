@@ -8,34 +8,43 @@ namespace CourseWork_2.Data.Service;
 public class HrDepartmentService : IHrDepartment
 {
     private readonly LocalStorageService<Company> _companyStorageService = new();
+    private readonly LocalStorageService<Human> _humanStorageService = new();
     private readonly LocalEmployeeService _employeeService = new();
 
 
     public void InviteEmployee(Company company, Human human, string position)
     {
-        if (!IsEmployee(company, human))
+        company.EmployeeUUIDs.Add(human.UUID);
+        _companyStorageService.UpdateEntity($"companies/{company.Name}", company);
+
+        var employmentHistory = human.EmploymentHistoryRecords;
+        employmentHistory.Add(new EmploymentHistoryRecord(
+            degree: EmploymentHistoryRecord.AcademicDegree.NoDegree,
+            rank: EmploymentHistoryRecord.AcademicRank.NoRank,
+            workingEndDate: null,
+            workingStartDate: DateTime.Now,
+            companyUuid: company.UUID,
+            fireReason: "",
+            positionAtWork: position,
+            rewards: new List<Reward>(),
+            careerMoves: new List<CareerMove>(),
+            startEmploymentPosition: position,
+            punishments: new List<Punishment>()));
+        _humanStorageService.UpdateEntity($"humans/{human.UUID}", human);
+        
+        Debug.WriteLine(employmentHistory.Count);
+
+        var existingEmployee = _employeeService.GetEmployeeByUuid(human.UUID);
+        if (existingEmployee != null)
         {
-            company.EmployeeUUIDs.Add(human.UUID);
-            SaveCompany(company);
-
-            var employmentHistory = human.EmploymentHistoryRecords;
-            Debug.WriteLine(employmentHistory.Count);
-
-            employmentHistory.Add(new EmploymentHistoryRecord(
-                degree: EmploymentHistoryRecord.AcademicDegree.NoDegree,
-                rank: EmploymentHistoryRecord.AcademicRank.NoRank,
-                workingEndDate: null,
-                workingStartDate: DateTime.Now,
-                companyUuid: company.UUID,
-                fireReason: "",
-                positionAtWork: position,
-                rewards: new List<Reward>(),
-                careerMoves: new List<CareerMove>(),
-                startEmploymentPosition: position,
-                punishments: new List<Punishment>()));
-            Debug.WriteLine(employmentHistory.Count);
-            human.EmploymentHistoryRecords = employmentHistory;
-
+            Debug.WriteLine("Employee has been found, updating");
+            existingEmployee.EmploymentHistoryRecords = employmentHistory;
+            existingEmployee.Position = position;
+            _employeeService.UpdateEmployee(existingEmployee);
+        }
+        else
+        {
+            Debug.WriteLine("Employee not found, creating new");
             _employeeService.SaveEmployee(new Employee(
                 uuid: human.UUID,
                 companyUuid: company.UUID,
@@ -55,7 +64,7 @@ public class HrDepartmentService : IHrDepartment
         company.EmployeeUUIDs.Remove(employee);
         Console.WriteLine("Firing employee");
         SaveCompany(company);
-        var employeeByUuid = _employeeService.GetEmployeeByUUID(human.UUID);
+        var employeeByUuid = _employeeService.GetEmployeeByUuid(human.UUID);
         if (employeeByUuid == null) return;
         List<EmploymentHistoryRecord> historyRecords = employeeByUuid.EmploymentHistoryRecords;
         var employmentHistoryRecord = historyRecords.Last();
@@ -72,7 +81,7 @@ public class HrDepartmentService : IHrDepartment
             var employee = company.EmployeeUUIDs.FirstOrDefault(e => e == human.UUID);
             if (employee != null)
             {
-                var employeeEntity = _employeeService.GetEmployeeByUUID(human.UUID);
+                var employeeEntity = _employeeService.GetEmployeeByUuid(human.UUID);
                 if (employeeEntity == null) return new List<EmploymentHistoryRecord>();
                 return employeeEntity.EmploymentHistoryRecords;
             }
@@ -80,12 +89,7 @@ public class HrDepartmentService : IHrDepartment
 
         return new List<EmploymentHistoryRecord>();
     }
-
-    private bool IsEmployee(Company company, Human human)
-    {
-        return company.EmployeeUUIDs.Any(e => e == human.UUID);
-    }
-
+    
     private void SaveCompany(Company company)
     {
         string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);

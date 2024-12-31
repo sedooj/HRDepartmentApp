@@ -121,9 +121,9 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 string position = PositionEntry.Text;
                 _controller.InviteEmployee(position);
                 UpdateButtonsVisibility();
-                LoadEmployees();
                 HumanPicker.SelectedIndex = -1;
                 Debug.WriteLine("OnInviteClicked executed successfully.");
+                LoadEmployees();
             }
             catch (Exception ex)
             {
@@ -139,7 +139,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 {
                     var employees = _controller.SelectedCompany.EmployeeUUIDs.Select((uuid, index) =>
                     {
-                        var employee = _employeeService.GetEmployeeByUUID(uuid);
+                        var employee = _employeeService.GetEmployeeByUuid(uuid);
                         return new
                         {
                             Number = index + 1,
@@ -174,7 +174,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 }
 
                 Debug.WriteLine($"Employee UUID: {employeeUuid}");
-                var employee = _employeeService.GetEmployeeByUUID(employeeUuid);
+                var employee = _employeeService.GetEmployeeByUuid(employeeUuid);
                 if (employee == null)
                 {
                     Debug.WriteLine("Employee not found.");

@@ -30,7 +30,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                     {
                         Index = index + 1,
                         record.PositionAtWork,
-                        WorkingPeriod = $"{record.WorkingStartDate:yyyy-MM-dd} - {(record.WorkingEndDate.HasValue ? record.WorkingEndDate.Value.ToString("yyyy-MM-dd") : " ...")}"
+                        WorkingPeriod = $"{record.WorkingStartDate:yyyy-MM-dd} - {(record.WorkingEndDate.HasValue ? record.WorkingEndDate.Value.ToString("dd-mm-yyyy") : " Нынешнее время")}"
                     }).ToList();
                 Debug.WriteLine("EmployeePage initialized successfully.");
             }
@@ -39,9 +39,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 Debug.WriteLine($"Error initializing EmployeePage: {ex}");
             }
         }
-
-        public string EmploymentHistorySummary => $"Number of Records: {_employee?.EmploymentHistoryRecords.Count ?? 0}";
-
+        
         private async void OnRewardClicked(object sender, EventArgs e)
         {
             try
@@ -77,7 +75,6 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 {
                     _controller.FireEmployee(_company, _employee, fireReason);
                     await Navigation.PopAsync();
-                    _controller.LoadData();
 
                     Debug.WriteLine("OnFireClicked executed successfully.");
                 }

@@ -15,7 +15,7 @@
             <CollectionView x:Name="EmploymentHistoryCollectionView" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="10" ColumnDefinitions="Auto,*,Auto">
+                        <Grid Padding="10" ColumnDefinitions="Auto,*,*,Auto">
                             <Label Grid.Column="0" Text="{Binding Index}" VerticalOptions="Center" Margin="0,0,10,0" />
                             <Label Grid.Column="1" Text="{Binding PositionAtWork}" VerticalOptions="Center" />
                             <Label Grid.Column="2" Text="{Binding WorkingPeriod}" VerticalOptions="Center" Margin="10,0,0,0" />

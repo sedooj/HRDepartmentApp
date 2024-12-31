@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CourseWork_2.Domain.Service;
 using CourseWork_2.Presentation.Util;
 
@@ -44,11 +45,27 @@ public class LocalStorageService<T> : IStorage<T> where T : class
 
     public void SaveEntity(string dir, T entity)
     {
-        string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        Directory.CreateDirectory(directoryPath);
-        string filePath = Path.Combine(directoryPath, $"{dir}.json");
-        var jsonString = _serializer.Serialize(entity);
-        File.WriteAllText(filePath, jsonString);
+        try
+        {
+            string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            string fullPath = Path.Combine(directoryPath, dir);
+            string directory = Path.GetDirectoryName(fullPath);
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            string filePath = $"{fullPath}.json";
+            var jsonString = _serializer.Serialize(entity);
+            File.WriteAllText(filePath, jsonString);
+            Debug.WriteLine($"Entity {entity} saved successfully.");
+        }
+        catch (Exception e)
+        {
+            Debug.WriteLine($"(LocalStorageService) Can't save entity. Reason: {e}");
+            throw;
+        }
     }
 
     public void UpdateEntity(string dir, T updatedEntity)
@@ -60,6 +77,7 @@ public class LocalStorageService<T> : IStorage<T> where T : class
         {
             var jsonString = _serializer.Serialize(updatedEntity);
             File.WriteAllText(filePath, jsonString);
+            Debug.WriteLine($"Entity {updatedEntity} updated successfully.");
         }
         else
         {

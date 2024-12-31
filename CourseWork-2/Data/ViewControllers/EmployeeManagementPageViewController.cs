@@ -35,15 +35,6 @@ namespace CourseWork_2.Data.ViewControllers
         {
             if (SelectedCompany != null && SelectedHuman != null && !IsEmployee(SelectedCompany, SelectedHuman))
             {
-                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string employeeDirectoryPath = Path.Combine(documentsPath, "employee");
-
-                // Ensure the directory exists
-                if (!Directory.Exists(employeeDirectoryPath))
-                {
-                    Directory.CreateDirectory(employeeDirectoryPath);
-                }
-
                 _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman, position);
             }
         }
@@ -53,7 +44,6 @@ namespace CourseWork_2.Data.ViewControllers
             if (IsEmployee(company, employee))
             {
                 _hrDepartmentService.FireEmployee(company, employee, fireReason);
-                LoadData();
             }
         }
 
