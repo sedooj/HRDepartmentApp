@@ -1,10 +1,10 @@
-using CourseWork_2.Data.ViewControllers.UserCreation;
+using CourseWork_2.Data.ViewModels.UserCreation;
 
 namespace CourseWork_2.Presentation.Pages.UserCreate;
 
 public partial class UserCreationPage
 {
-    private readonly UserCreationViewController _controller = new();
+    private readonly UserCreationViewModel _model = new();
 
     public UserCreationPage()
     {
@@ -15,7 +15,7 @@ public partial class UserCreationPage
     {
         try
         {
-            if (_controller.CreateHuman())
+            if (_model.CreateHuman())
             {
                 Navigation.PopAsync();
             }
@@ -31,7 +31,7 @@ public partial class UserCreationPage
     {
         try
         {
-            var passportPage = new PassportPage(_controller.HumanData, _controller);
+            var passportPage = new PassportPage(_model.HumanData, _model);
             Navigation.PushAsync(passportPage);
         }
         catch (Exception ex)
@@ -45,7 +45,7 @@ public partial class UserCreationPage
     {
         try
         {
-            var userDefaultCredentialsPage = new UserDefaultCredentialsPage(_controller.HumanData, _controller);
+            var userDefaultCredentialsPage = new UserDefaultCredentialsPage(_model.HumanData, _model);
             Navigation.PushAsync(userDefaultCredentialsPage);
         }
         catch (Exception ex)
@@ -59,7 +59,7 @@ public partial class UserCreationPage
     {
         try
         {
-            var educationDocumentPage = new EducationDocumentPage(_controller.HumanData, _controller);
+            var educationDocumentPage = new EducationDocumentPage(_model.HumanData, _model);
             Navigation.PushAsync(educationDocumentPage);
         }
         catch (Exception ex)

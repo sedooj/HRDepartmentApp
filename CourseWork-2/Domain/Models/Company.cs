@@ -17,7 +17,7 @@ namespace CourseWork_2.Domain.Models
             _employeeUUIDs = employeeUUIDs;
         }
 
-        public string UUID
+        public string Uuid
         {
             get => _uuid;
             set => _uuid = value;

@@ -2,12 +2,11 @@ using CourseWork_2.Data.Service;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Presentation.Util;
 
-namespace CourseWork_2.Data.ViewControllers.UserCreation
+namespace CourseWork_2.Data.ViewModels.UserCreation
 {
-    public class UserCreationViewController
+    public class UserCreationViewModel
     {
         public HumanDataHolder HumanData { get; set; } = new();
-        private readonly LocalStorageService<Human> _localStorageService = new();
 
         private bool ValidateHuman()
         {
@@ -49,7 +48,7 @@ namespace CourseWork_2.Data.ViewControllers.UserCreation
                     Directory.CreateDirectory(directoryPath);
                 }
 
-                string filePath = Path.Combine(directoryPath, $"{human.UUID}.json");
+                string filePath = Path.Combine(directoryPath, $"{human.Uuid}.json");
                 string json = new JsonObjectSerializer().Serialize(human);
                 File.WriteAllText(filePath, json);
 

@@ -21,7 +21,7 @@ public class Human
         _educationDocument = educationDocument;
     }
     
-    public string UUID
+    public string Uuid
     {
         get { return _uuid; }
         set { _uuid = value; }

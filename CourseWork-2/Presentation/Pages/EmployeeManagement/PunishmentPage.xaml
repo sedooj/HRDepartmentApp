@@ -4,7 +4,7 @@
              Title="Добавить наказание">
     <StackLayout Padding="30,10" Spacing="20">
         <Label Text="Тип наказания" />
-        <Picker x:Name="PunishmentTypePicker">
+        <Picker x:Name="PunishmentTypePicker" SelectedIndexChanged="OnPunishmentTypeChanged">
             <Picker.ItemsSource>
                 <x:Array Type="{x:Type x:String}">
                     <x:String>Предупреждение</x:String>
@@ -16,6 +16,7 @@
                 </x:Array>
             </Picker.ItemsSource>
         </Picker>
+        <Label x:Name="ReasonLabel" Text="Причина" IsVisible="False" />
         <Button Text="Сохранить" Clicked="OnSaveClicked" />
     </StackLayout>
 </ContentPage>

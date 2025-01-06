@@ -1,18 +1,18 @@
 using CourseWork_2.Data.ViewControllers;
-using CourseWork_2.Data.ViewControllers.UserCreation;
+using CourseWork_2.Data.ViewModels.UserCreation;
 using CourseWork_2.Domain.Models;
 
 namespace CourseWork_2.Presentation.Pages.UserCreate;
 
 public partial class UserDefaultCredentialsPage
 {
-    private readonly UserDefaultCredentialsController _controller = new();
-    private readonly UserCreationViewController _userCreationController;
+    private readonly UserDefaultCredentialsViewModel _viewModel = new();
+    private readonly UserCreationViewModel _userCreationModel;
 
-    public UserDefaultCredentialsPage(HumanDataHolder humanData, UserCreationViewController userCreationController)
+    public UserDefaultCredentialsPage(HumanDataHolder humanData, UserCreationViewModel userCreationModel)
     {
         InitializeComponent();
-        _userCreationController = userCreationController;
+        _userCreationModel = userCreationModel;
         
         if (humanData.UserDefaultCredentials == null) return;
         var credentials = humanData.UserDefaultCredentials;
@@ -26,37 +26,37 @@ public partial class UserDefaultCredentialsPage
 
     private void OnFirstNameTextChanged(object sender, TextChangedEventArgs e)
     {
-        _controller.ValidateFirstName((Entry)sender);
+        _viewModel.ValidateFirstName((Entry)sender);
     }
 
     private void OnLastNameTextChanged(object sender, TextChangedEventArgs e)
     {
-        _controller.ValidateLastName((Entry)sender);
+        _viewModel.ValidateLastName((Entry)sender);
     }
 
     private void OnSecondNameTextChanged(object sender, TextChangedEventArgs e)
     {
-        _controller.ValidateSecondName((Entry)sender);
+        _viewModel.ValidateSecondName((Entry)sender);
     }
 
     private void OnDateOfBirthDateSelected(object sender, DateChangedEventArgs e)
     {
-        _controller.ValidateDateOfBirth((DatePicker)sender);
+        _viewModel.ValidateDateOfBirth((DatePicker)sender);
     }
 
     private void OnHomeAddressTextChanged(object sender, TextChangedEventArgs e)
     {
-        _controller.ValidateHomeAddress((Entry)sender);
+        _viewModel.ValidateHomeAddress((Entry)sender);
     }
 
     private void OnPhoneNumberTextChanged(object sender, TextChangedEventArgs e)
     {
-        _controller.ValidatePhoneNumber((Entry)sender);
+        _viewModel.ValidatePhoneNumber((Entry)sender);
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
     {
-        if (!await _controller.ValidateInputs(FirstNameEntry, LastNameEntry, SecondNameEntry, DateOfBirthDatePicker, HomeAddressEntry, PhoneNumberEntry))
+        if (!await _viewModel.ValidateInputs(FirstNameEntry, LastNameEntry, SecondNameEntry, DateOfBirthDatePicker, HomeAddressEntry, PhoneNumberEntry))
         {
             return;
         }
@@ -71,7 +71,7 @@ public partial class UserDefaultCredentialsPage
             ""
         );
 
-        _userCreationController.UpdateUserDefaultCredentials(userDefaultCredentials);
+        _userCreationModel.UpdateUserDefaultCredentials(userDefaultCredentials);
         await Navigation.PopAsync();
     }
 }

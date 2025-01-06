@@ -1,8 +1,8 @@
 using CourseWork_2.Presentation.Util;
 
-namespace CourseWork_2.Data.ViewControllers.UserCreation;
+namespace CourseWork_2.Data.ViewModels.UserCreation;
 
-public class UserDefaultCredentialsController
+public class UserDefaultCredentialsViewModel
 {
     public bool ValidateFirstName(Entry entry)
     {

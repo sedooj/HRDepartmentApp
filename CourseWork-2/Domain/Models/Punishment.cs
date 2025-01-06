@@ -4,7 +4,7 @@ public sealed class Punishment
 {
     private PunishmentType _type;
     private DateTime _date;
-
+    private string _reason;
     public PunishmentType Type
     {
         get => _type;
@@ -17,11 +17,19 @@ public sealed class Punishment
         set => _date = value;
     }
 
-    public Punishment(PunishmentType type, DateTime date)
+    public string Reason
+    {
+        get => _reason;
+        set => _reason = value;
+    }
+    
+    public Punishment(PunishmentType type, DateTime date, string reason)
     {
         _type = type;
         _date = date;
+        _reason = reason;
     }
+    
 
     public enum PunishmentType
     {
@@ -30,6 +38,6 @@ public sealed class Punishment
         Fines,
         BonusesWithholding,
         Demotion,
-        Dismissal
+        Fire
     }
 }

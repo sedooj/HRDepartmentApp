@@ -49,11 +49,19 @@ public class LocalStorageService<T> : IStorage<T> where T : class
         {
             string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string fullPath = Path.Combine(directoryPath, dir);
-            string directory = Path.GetDirectoryName(fullPath);
+            string? directory = Path.GetDirectoryName(fullPath);
 
             if (!Directory.Exists(directory))
             {
-                Directory.CreateDirectory(directory);
+                if (directory != null)
+                {
+                    Debug.WriteLine("SaveEntity > Creating directory: " + directory);
+                    Directory.CreateDirectory(directory);
+                }
+                else
+                {
+                    Debug.WriteLine("SaveEntity > Directory is not exist and directory name is null.");
+                }
             }
 
             string filePath = $"{fullPath}.json";

@@ -5,26 +5,30 @@
     <ContentPage.Resources>
     </ContentPage.Resources>
     <StackLayout Padding="30,10" Spacing="20">
-        <Label Text="Выберите компанию" />
-        <Picker x:Name="CompanyPicker" SelectedIndexChanged="OnCompanySelected" />
+        <Grid ColumnSpacing="20" RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <Label Text="Выберите человека" />
-        <Picker x:Name="HumanPicker" SelectedIndexChanged="OnHumanSelected" />
+            <Label Text="Выберите компанию" Grid.Row="0" Grid.Column="0" />
+            <Label Text="Выберите человека" Grid.Row="0" Grid.Column="1" />
+
+            <Picker x:Name="CompanyPicker" SelectedIndexChanged="OnCompanySelected" Grid.Row="1" Grid.Column="0" />
+            <Picker x:Name="HumanPicker" SelectedIndexChanged="OnHumanSelected" Grid.Row="1" Grid.Column="1" />
+        </Grid>
 
         <Entry x:Name="PositionEntry" Placeholder="Введите должность" IsVisible="False" />
 
         <Button x:Name="InviteButton" Text="Пригласить" Clicked="OnInviteClicked" IsVisible="False" />
 
-        <Label Text="Сотрудники компании" FontAttributes="Bold" Margin="0,20,0,0" />
+        <Label x:Name="CompanyEmployeesLabel" Text="Сотрудники компании" FontAttributes="Bold" Margin="0,20,0,0" IsVisible="False" />
 
-        <Grid x:Name="TableGrid" Padding="10" ColumnDefinitions="Auto,20,*,*,Auto">
-            <Label Grid.Column="0" Text="№" FontAttributes="Bold" VerticalOptions="Center" />
-            <Label Grid.Column="2" Text="Имя" FontAttributes="Bold" VerticalOptions="Center" />
-            <Label Grid.Column="3" Text="Должность" FontAttributes="Bold" VerticalOptions="Center" />
-            <Label Grid.Column="4" Text="" VerticalOptions="Center" />
-        </Grid>
-
-        <Frame x:Name="TableFrame" CornerRadius="10" Padding="0">
+        <Frame x:Name="TableFrame" CornerRadius="10" Padding="0" IsVisible="False">
             <CollectionView x:Name="EmployeesCollectionView" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -32,7 +36,7 @@
                             <Label Grid.Column="0" Text="{Binding Number}" VerticalOptions="Center" />
                             <Label Grid.Column="2" Text="{Binding Name}" VerticalOptions="Center" />
                             <Label Grid.Column="3" Text="{Binding Position}" VerticalOptions="Center" />
-                            <Button TextColor="Black" BackgroundColor="LightSkyBlue" Grid.Column="4" Text="Посмотреть" Clicked="OnViewClicked" CommandParameter="{Binding UUID}" VerticalOptions="Center" />
+                            <Button TextColor="Black" BackgroundColor="LightSkyBlue" Grid.Column="4" Text="Посмотреть" Clicked="OnViewClicked" CommandParameter="{Binding Uuid}" VerticalOptions="Center" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

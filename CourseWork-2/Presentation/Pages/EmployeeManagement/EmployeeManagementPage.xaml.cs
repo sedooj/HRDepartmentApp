@@ -2,14 +2,17 @@ using CourseWork_2.Data.ViewControllers;
 using CourseWork_2.Domain.Models;
 using System.Diagnostics;
 using CourseWork_2.Data.Service;
+using CourseWork_2.Data.ViewModels;
 using CourseWork_2.Presentation.Util;
+using Microsoft.Maui.Animations;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
     public partial class EmployeeManagementPage
     {
-        private readonly EmployeeManagementPageViewController _controller = new();
+        private readonly EmployeeManagementPageViewModel _controller = new();
         private readonly LocalStorageService<Human> _humanStorageService = new();
+
         public EmployeeManagementPage()
         {
             try
@@ -30,7 +33,10 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             base.OnAppearing();
             try
             {
+                _controller.LoadData();
+                LoadData();
                 LoadEmployees();
+                UpdateButtonsVisibility();
                 Debug.WriteLine("OnAppearing executed successfully.");
             }
             catch (Exception ex)
@@ -39,6 +45,27 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
+        private void OnInviteClicked(object sender, EventArgs e)
+        {
+            Debug.WriteLine("OnInviteClicked started.");
+            try
+            {
+                string position = PositionEntry.Text;
+                _controller.InviteEmployee(position);
+                _controller.SelectedHuman = null;
+                _controller.LoadData();
+                LoadData();
+                UpdateButtonsVisibility();
+                LoadEmployees();
+                HumanPicker.SelectedIndex = -1;
+                Debug.WriteLine("OnInviteClicked executed successfully.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in OnInviteClicked: {ex}");
+            }
+        }
+        
         private void LoadData()
         {
             try
@@ -48,7 +75,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 Debug.WriteLine($"Loaded companies: {string.Join(", ", companyNames ?? new List<string>())}");
 
                 HumanPicker.ItemsSource = _controller.Humans?.Select(h => h.UserDefaultCredentials.FirstName).ToList();
-
+                
                 Debug.WriteLine("LoadData executed successfully.");
             }
             catch (Exception ex)
@@ -62,8 +89,9 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             try
             {
                 _controller.SelectedCompany = _controller.Companies?[CompanyPicker.SelectedIndex];
-                TableGrid.IsVisible = _controller.SelectedCompany != null;
-                TableFrame.IsVisible = _controller.SelectedCompany != null;
+                bool isCompanySelected = _controller.SelectedCompany != null;
+                TableFrame.IsVisible = isCompanySelected;
+                CompanyEmployeesLabel.IsVisible = isCompanySelected;
                 LoadData();
                 LoadEmployees();
                 Debug.WriteLine("OnCompanySelected executed successfully.");
@@ -97,15 +125,15 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 
         private void UpdateButtonsVisibility()
         {
+            Debug.WriteLine("UpdateButtonsVisibility started.");
             try
             {
-                if (_controller.SelectedCompany != null && _controller.SelectedHuman != null)
-                {
-                    bool isEmployee = _controller.IsEmployee(_controller.SelectedCompany, _controller.SelectedHuman.UUID);
-                    Console.WriteLine(isEmployee);
-                    InviteButton.IsVisible = !isEmployee;
-                    PositionEntry.IsVisible = !isEmployee;
-                }
+                bool isEmployee = _controller.SelectedHuman != null &&
+                                  _controller.SelectedCompany != null &&
+                                  !_controller.IsEmployee(_controller.SelectedCompany, _controller.SelectedHuman.Uuid);
+
+                InviteButton.IsVisible = isEmployee;
+                PositionEntry.IsVisible = isEmployee;
 
                 Debug.WriteLine("UpdateButtonsVisibility executed successfully.");
             }
@@ -115,25 +143,9 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             }
         }
 
-        private void OnInviteClicked(object sender, EventArgs e)
-        {
-            try
-            {
-                string position = PositionEntry.Text;
-                _controller.InviteEmployee(position);
-                UpdateButtonsVisibility();
-                HumanPicker.SelectedIndex = -1;
-                Debug.WriteLine("OnInviteClicked executed successfully.");
-                LoadEmployees();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in OnInviteClicked: {ex}");
-            }
-        }
-
         private void LoadEmployees()
         {
+            Debug.WriteLine("LoadEmployees started.");
             try
             {
                 if (_controller.SelectedCompany != null)
@@ -144,15 +156,14 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                         return new
                         {
                             Number = index + 1,
-                            Name = employee?.UserDefaultCredentials.FirstName + " "+ employee?.UserDefaultCredentials.LastName,
+                            Name = employee?.UserDefaultCredentials.FirstName + " " +
+                                   employee?.UserDefaultCredentials.LastName,
                             Position = employee?.EmploymentHistoryRecords.Last().PositionAtWork,
-                            UUID = uuid
+                            Uuid = uuid
                         };
                     }).ToList();
-
                     EmployeesCollectionView.ItemsSource = employees;
                 }
-
                 Debug.WriteLine("LoadEmployees executed successfully.");
             }
             catch (Exception ex)
@@ -160,7 +171,6 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 Debug.WriteLine($"Error in LoadEmployees: {ex}");
             }
         }
-
         private async void OnViewClicked(object sender, EventArgs e)
         {
             try
@@ -170,20 +180,19 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 var employeeUuid = button?.CommandParameter as string;
                 if (employeeUuid == null)
                 {
-                    Debug.WriteLine("Employee UUID is null.");
+                    Debug.WriteLine("Cant OnViewClicked, Employee UUID is null.");
                     return;
                 }
 
-                Debug.WriteLine($"Employee UUID: {employeeUuid}");
-                var employee = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
-                if (employee == null)
+                _controller.SelectedHuman = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
+
+                if (_controller.SelectedHuman == null)
                 {
-                    Debug.WriteLine("Employee not found.");
+                    Debug.WriteLine("Cant OnViewClicked, Loaded human is null.");
                     return;
                 }
 
-                Debug.WriteLine($"Employee found: {employee.UserDefaultCredentials.FirstName} {employee.UserDefaultCredentials.LastName}");
-                await Navigation.PushAsync(new EmployeePage(_controller.SelectedCompany, employee, _controller));
+                await Navigation.PushAsync(new EmployeePage(_controller));
                 Debug.WriteLine("OnViewClicked executed successfully.");
             }
             catch (Exception ex)

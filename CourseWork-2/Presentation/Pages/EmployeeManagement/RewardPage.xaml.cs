@@ -1,17 +1,17 @@
+using System.Diagnostics;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Data.ViewControllers;
+using CourseWork_2.Data.ViewModels;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
     public partial class RewardPage
     {
-        private readonly Human _employee;
-        private readonly EmployeeManagementPageViewController _controller;
+        private readonly EmployeeManagementPageViewModel _controller;
 
-        public RewardPage(Human employee, EmployeeManagementPageViewController controller)
+        public RewardPage(EmployeeManagementPageViewModel controller)
         {
             InitializeComponent();
-            _employee = employee;
             _controller = controller;
         }
 
@@ -21,18 +21,36 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             {
                 if (RewardTypePicker.SelectedIndex == -1)
                 {
-                    Console.WriteLine("Reward type not selected.");
+                    Debug.WriteLine("RewardPage, Reward type not selected.");
                     await DisplayAlert("Ошибка", "Выберите награду", "OK");
                     return;
                 }
 
                 var selectedType = (Reward.RewardType)RewardTypePicker.SelectedIndex;
 
-                var reward = new Reward(type: selectedType, date: DateTime.Now);
-                _controller.GiveReward(_employee, reward);
+                if (selectedType == Reward.RewardType.Promotion)
+                {
+                    string newPosition = await DisplayPromptAsync("Повышение", "Введите новую должность:");
+                    if (string.IsNullOrEmpty(newPosition))
+                    {
+                        await DisplayAlert("Ошибка", "Введите новую должность", "OK");
+                        return;
+                    }
+                    if (_controller.SelectedHuman == null)
+                    {
+                        Debug.WriteLine("RewardPage, Selected human is null.");
+                        return;
+                    }
+                    _controller.PromoteEmployee(_controller.SelectedHuman.Uuid, newPosition);
+                }
+                else
+                {
+                    var reward = new Reward(type: selectedType, date: DateTime.Now);
+                    _controller.GiveReward(_controller.SelectedHuman!, reward);
 
-                Console.WriteLine("Reward successfully added.");
-                await DisplayAlert("Успех", "Награда успешно выдана", "OK");
+                    Debug.WriteLine("RewardPage, Reward successfully added.");
+                }
+
                 await Navigation.PopAsync();
             }
             catch (Exception ex)

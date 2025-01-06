@@ -7,18 +7,18 @@ namespace CourseWork_2.Data.Service;
 
 public class HrDepartmentService : IHrDepartment
 {
-    private readonly LocalStorageService<Company> _companyStorageService = new();
-    private readonly LocalStorageService<Human> _humanStorageService = new();
+    private readonly IStorage<Company> _companyStorageService = new LocalStorageService<Company>();
+    private readonly IStorage<Human> _humanStorageService = new LocalStorageService<Human>();
 
 
     public void InviteEmployee(Company company, string humanUuid, string position)
     {
         company.EmployeeUUIDs.Add(humanUuid);
-        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Name}", company);
+        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Uuid}", company);
         var human = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{humanUuid}");
         if (human == null)
         {
-            Debug.WriteLine("Human is null");
+            Debug.WriteLine("InviteEmployee > Human is null");
             return;
         }
         var employmentHistory = new List<EmploymentHistoryRecord>(human.EmploymentHistoryRecords);
@@ -27,7 +27,7 @@ public class HrDepartmentService : IHrDepartment
             rank: EmploymentHistoryRecord.AcademicRank.NoRank,
             workingEndDate: null,
             workingStartDate: DateTime.Now,
-            companyUuid: company.UUID,
+            companyUuid: company.Uuid,
             fireReason: "",
             positionAtWork: position,
             rewards: new List<Reward>(),
@@ -35,18 +35,17 @@ public class HrDepartmentService : IHrDepartment
             startEmploymentPosition: position,
             punishments: new List<Punishment>()));
         human.EmploymentHistoryRecords = employmentHistory;
-        _humanStorageService.UpdateEntity($"{Config.HumanStoragePath}{human.UUID}", human);
+        _humanStorageService.UpdateEntity($"{Config.HumanStoragePath}{human.Uuid}", human);
     }
 
     public void FireEmployee(Company company, string humanUuid, string fireReason)
     {
         company.EmployeeUUIDs.Remove(humanUuid);
-        Console.WriteLine("Firing employee");
-        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Name}", company);
+        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Uuid}", company);
         var human = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{humanUuid}");
         if (human == null)
         {
-            Debug.WriteLine("Human is null in FireEmployee");
+            Debug.WriteLine("FireEmployee > Human is null in ");
             return;
         }
         human.EmploymentHistoryRecords.Last().WorkingEndDate = DateTime.Now;
@@ -59,10 +58,10 @@ public class HrDepartmentService : IHrDepartment
         var companies = _companyStorageService.LoadEntities("SavedCompanies");
         foreach (var company in companies)
         {
-            var employee = company.EmployeeUUIDs.FirstOrDefault(e => e == human.UUID);
+            var employee = company.EmployeeUUIDs.FirstOrDefault(e => e == human.Uuid);
             if (employee != null)
             {
-                var employeeEntity = _humanStorageService.LoadEntity(human.UUID);
+                var employeeEntity = _humanStorageService.LoadEntity(human.Uuid);
                 if (employeeEntity == null) return new List<EmploymentHistoryRecord>();
                 return employeeEntity.EmploymentHistoryRecords;
             }

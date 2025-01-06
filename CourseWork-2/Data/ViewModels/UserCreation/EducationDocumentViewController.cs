@@ -1,9 +1,9 @@
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Presentation.Util;
 
-namespace CourseWork_2.Data.ViewControllers;
+namespace CourseWork_2.Data.ViewModels.UserCreation;
 
-public class EducationDocumentController
+public class EducationDocumentViewModel
 {
     private const int MaxSerialLength = 6;
     private const int MaxNumberLength = 7;
@@ -65,9 +65,8 @@ public class EducationDocumentController
 
         bool isSerialValid = ValidateSerial(serialEntry.Text).Item1;
         bool isNumberValid = ValidateNumber(numberEntry.Text).Item1;
-        bool isDateOfIssueValid = ValidateDateOfIssue(dateOfIssueDatePicker.Date);
 
-        if (!isSerialValid || !isNumberValid || !isDateOfIssueValid)
+        if (!isSerialValid || !isNumberValid)
         {
             await Application.Current.MainPage.DisplayAlert("Ошибка", "Пожалуйста, исправьте ошибки ввода", "OK");
             return false;

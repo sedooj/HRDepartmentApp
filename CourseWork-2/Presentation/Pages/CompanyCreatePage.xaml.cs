@@ -1,11 +1,12 @@
 using CourseWork_2.Data.ViewControllers;
+using CourseWork_2.Data.ViewModels;
 using CourseWork_2.Presentation.Util;
 
 namespace CourseWork_2.Presentation.Pages;
 
 public partial class CompanyCreatePage
 {
-    private readonly CompanyCreatePageViewController _controller = new();
+    private readonly CompanyCreatePageViewModel _model = new();
 
     public CompanyCreatePage()
     {
@@ -21,25 +22,22 @@ public partial class CompanyCreatePage
         string address = AddressEntry.Text;
         string phone = PhoneEntry.Text;
 
-        if (_controller.CreateCompany(name, address, phone))
-        {
-            _controller.SaveCompanyToJson();
-            Navigation.PopAsync();
-        }
+        _model.CreateCompany(name, address, phone);
+        Navigation.PopAsync();
     }
 
     private void OnNameEntryTextChanged(object sender, TextChangedEventArgs e)
     {
-        EntryUtil.ChangeEntryColor(NameEntry, _controller.ValidateCompanyName(e.NewTextValue));
+        EntryUtil.ChangeEntryColor(NameEntry, _model.ValidateCompanyName(e.NewTextValue));
     }
 
     private void OnAddressEntryTextChanged(object sender, TextChangedEventArgs e)
     {
-        EntryUtil.ChangeEntryColor(AddressEntry, _controller.ValidateCompanyAddress(e.NewTextValue));
+        EntryUtil.ChangeEntryColor(AddressEntry, _model.ValidateCompanyAddress(e.NewTextValue));
     }
 
     private void OnPhoneEntryTextChanged(object sender, TextChangedEventArgs e)
     {
-        EntryUtil.ChangeEntryColor(PhoneEntry, _controller.ValidateCompanyPhone(e.NewTextValue));
+        EntryUtil.ChangeEntryColor(PhoneEntry, _model.ValidateCompanyPhone(e.NewTextValue));
     }
 }
