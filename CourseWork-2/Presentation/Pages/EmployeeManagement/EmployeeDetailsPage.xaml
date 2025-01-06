@@ -1,0 +1,33 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:util="clr-namespace:CourseWork_2.Presentation.Util"
+             x:Class="CourseWork_2.Presentation.Pages.EmployeeManagement.EmployeeDetailsPage"
+             Title="Детали записи о трудовой деятельности">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <util:EmptyFieldConverter x:Key="EmptyFieldConverter" />
+            <util:EnumTextConverter x:Key="EnumTextConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView>
+        <StackLayout Padding="30,10" Spacing="20">
+            <Label Text="{Binding PositionAtWork, Converter={StaticResource EmptyFieldConverter}, StringFormat='Должность: {0}'}" />
+
+            <Label Text="{Binding WorkingStartDate, StringFormat='Дата начала работы: {0:dd.MM.yyyy}', Converter={StaticResource EmptyFieldConverter}}" />
+
+            <Label Text="{Binding WorkingEndDate, StringFormat='Дата окончания работы: {0:dd.MM.yyyy}', Converter={StaticResource EmptyFieldConverter}}" />
+
+            <Label Text="{Binding CompanyUuid, Converter={StaticResource EmptyFieldConverter}, StringFormat='Компания: {0}'}" />
+
+            <Label Text="{Binding FireReason, Converter={StaticResource EmptyFieldConverter}, StringFormat='Причина увольнения: {0}'}" />
+
+            <Label Text="{Binding Rewards.Count, StringFormat='Количество наград: {0}'}" />
+
+            <Label Text="{Binding Punishments.Count, StringFormat='Количество наказаний: {0}'}" />
+
+            <Label Text="{Binding Degree, Converter={StaticResource EnumTextConverter}, StringFormat='Ученая степень: {0}'}" />
+
+            <Label Text="{Binding Rank, Converter={StaticResource EnumTextConverter}, StringFormat='Ученое звание: {0}'}" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,49 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CourseWork_2.Presentation.Pages.EmployeeManagement.EmployeePage"
+             Title="{Binding Title}">
+    <ScrollView>
+        <StackLayout Padding="30,10" Spacing="20">
+            <Grid ColumnSpacing="10" RowSpacing="10" HorizontalOptions="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Text="Наказать" BackgroundColor="DarkRed" TextColor="White" Clicked="OnPunishClicked" Grid.Row="0" Grid.Column="0" HorizontalOptions="Fill" WidthRequest="150" />
+                <Button Text="Наградить" BackgroundColor="Green" TextColor="White" Clicked="OnRewardClicked" Grid.Row="0" Grid.Column="1" HorizontalOptions="Fill" WidthRequest="150" />
+            </Grid>
+
+            <Label Text="Электронная трудовая книга" FontAttributes="Bold" Margin="0,20,0,0" />
+
+            <CollectionView x:Name="EmploymentHistoryCollectionView"
+                            VerticalOptions="FillAndExpand"
+                            HorizontalOptions="FillAndExpand">
+                <CollectionView.Header>
+                    <Grid Padding="10" ColumnDefinitions="Auto,20,*,*,*,Auto">
+                        <Label Text="№" FontAttributes="Bold" />
+                        <Label Text="" Grid.Column="1" />
+                        <Label Text="Должность" FontAttributes="Bold" Grid.Column="2" />
+                        <Label Text="Период работы" FontAttributes="Bold" Grid.Column="3" />
+                        <Label Text="Компания" FontAttributes="Bold" Grid.Column="4" />
+                        <Label Text="Действия" FontAttributes="Bold" Grid.Column="5" />
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="10" ColumnDefinitions="Auto,20,*,*,*,Auto">
+                            <Label Text="{Binding Index}" />
+                            <Label Text="" Grid.Column="1" />
+                            <Label Text="{Binding PositionAtWork}" Grid.Column="2" />
+                            <Label Text="{Binding WorkingPeriod}" Grid.Column="3" />
+                            <Button Text="Подробнее" CommandParameter="{Binding Index}" Clicked="OnViewDetailsClicked" Grid.Column="5" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
