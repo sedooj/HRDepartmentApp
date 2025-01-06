@@ -171,29 +171,30 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 Debug.WriteLine($"Error in LoadEmployees: {ex}");
             }
         }
+        
         private async void OnViewClicked(object sender, EventArgs e)
         {
             try
             {
                 Debug.WriteLine("OnViewClicked started.");
                 var button = sender as Button;
-                var employeeUuid = button?.CommandParameter as string;
-                if (employeeUuid == null)
+                if (button?.CommandParameter is string employeeUuid)
                 {
-                    Debug.WriteLine("Cant OnViewClicked, Employee UUID is null.");
-                    return;
+                    _controller.SelectedHuman = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
+
+                    if (_controller.SelectedHuman == null)
+                    {
+                        Debug.WriteLine("Cant OnViewClicked, Loaded human is null.");
+                        return;
+                    }
+
+                    await Navigation.PushAsync(new EmployeePage(_controller));
+                    Debug.WriteLine("OnViewClicked executed successfully.");
                 }
-
-                _controller.SelectedHuman = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
-
-                if (_controller.SelectedHuman == null)
+                else
                 {
-                    Debug.WriteLine("Cant OnViewClicked, Loaded human is null.");
-                    return;
+                    Debug.WriteLine("Cant OnViewClicked, Employee UUID is null or invalid.");
                 }
-
-                await Navigation.PushAsync(new EmployeePage(_controller));
-                Debug.WriteLine("OnViewClicked executed successfully.");
             }
             catch (Exception ex)
             {

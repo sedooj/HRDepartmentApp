@@ -48,6 +48,7 @@ public class LocalStorageService<T> : IStorage<T> where T : class
         try
         {
             string directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            Debug.WriteLine("SaveEntity > Directory path: " + directoryPath);
             string fullPath = Path.Combine(directoryPath, dir);
             string? directory = Path.GetDirectoryName(fullPath);
 
