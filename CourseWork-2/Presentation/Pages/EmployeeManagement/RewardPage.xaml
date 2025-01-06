@@ -1,0 +1,22 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CourseWork_2.Presentation.Pages.EmployeeManagement.RewardPage"
+             Title="Добавить награду">
+    <StackLayout Padding="30,10" Spacing="20">
+        <Label Text="Тип награды" />
+        <Picker x:Name="RewardTypePicker">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Бонусы</x:String>
+                    <x:String>Признание</x:String>
+                    <x:String>Сертификат</x:String>
+                    <x:String>Повышение</x:String>
+                    <x:String>Повышение зарплаты</x:String>
+                    <x:String>Дополнительные льготы</x:String>
+                    <x:String>Гибкий график</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
+        <Button Text="Сохранить" Clicked="OnSaveClicked" />
+    </StackLayout>
+</ContentPage>

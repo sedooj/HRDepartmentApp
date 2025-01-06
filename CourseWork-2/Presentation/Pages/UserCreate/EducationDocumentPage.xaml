@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CourseWork_2.Presentation.Pages.UserCreate.EducationDocumentPage"
+             Title="Документ об образовании">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30,10" Spacing="25">
+            <HorizontalStackLayout HorizontalOptions="FillAndExpand">
+                <VerticalStackLayout HorizontalOptions="Start">
+                    <Label Text="Серия" HorizontalOptions="FillAndExpand" />
+                    <Entry x:Name="SerialEntry" Placeholder="Введите серию" HorizontalOptions="FillAndExpand" />
+                </VerticalStackLayout>
+                <BoxView HorizontalOptions="FillAndExpand" />
+                <VerticalStackLayout HorizontalOptions="End">
+                    <Label Text="Номер" HorizontalOptions="FillAndExpand" />
+                    <Entry x:Name="NumberEntry" Placeholder="Введите номер" HorizontalOptions="FillAndExpand" />
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+
+            <Label Text="Уровень образования" HorizontalOptions="FillAndExpand" />
+            <Picker x:Name="LevelPicker" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Учреждение" HorizontalOptions="FillAndExpand" />
+            <Entry x:Name="InstitutionEntry" Placeholder="Введите учреждение" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Дата выпуска" HorizontalOptions="FillAndExpand" />
+            <DatePicker x:Name="GraduatedDatePicker" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Специальность" HorizontalOptions="FillAndExpand" />
+            <Entry x:Name="SpecialtyEntry" Placeholder="Введите специальность" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Направление" HorizontalOptions="FillAndExpand" />
+            <Entry x:Name="DirectionEntry" Placeholder="Введите направление" HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Дата выдачи" HorizontalOptions="FillAndExpand" />
+            <DatePicker x:Name="DateOfIssueDatePicker" HorizontalOptions="FillAndExpand" />
+
+            <Button Text="Сохранить" Clicked="OnSaveClicked" HorizontalOptions="FillAndExpand" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

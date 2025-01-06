@@ -1,0 +1,22 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CourseWork_2.Presentation.Pages.EmployeeManagement.PunishmentPage"
+             Title="Добавить наказание">
+    <StackLayout Padding="30,10" Spacing="20">
+        <Label Text="Тип наказания" />
+        <Picker x:Name="PunishmentTypePicker" SelectedIndexChanged="OnPunishmentTypeChanged">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Предупреждение</x:String>
+                    <x:String>Выговор</x:String>
+                    <x:String>Штрафы</x:String>
+                    <x:String>Удержание бонусов</x:String>
+                    <x:String>Понижение</x:String>
+                    <x:String>Увольнение</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
+        <Label x:Name="ReasonLabel" Text="Причина" IsVisible="False" />
+        <Button Text="Сохранить" Clicked="OnSaveClicked" />
+    </StackLayout>
+</ContentPage>

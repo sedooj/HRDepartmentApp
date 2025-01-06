@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CourseWork_2.Presentation.Pages.UserCreate.UserCreationPage"
+             Title="Создать пользователя">
+
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="30,10" Spacing="25">
+                <Button Text="Заполнить паспортные данные" Clicked="OnPassportButtonClicked" HorizontalOptions="Fill" />
+                <Button Text="Заполнить персональные данные" Clicked="OnUserDefaultCredentialsButtonClicked"
+                        HorizontalOptions="Fill" />
+                <Button Text="Заполнить документ об образовании" Clicked="OnEducationDocumentButtonClicked"
+                        HorizontalOptions="Fill" />
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button Grid.Row="1" Text="Создать" Clicked="OnCreateUserClicked" HorizontalOptions="Fill" Margin="30,10" />
+    </Grid>
+</ContentPage>

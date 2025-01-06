@@ -63,18 +63,38 @@
     </ItemGroup>
 
     <ItemGroup>
-      <AdditionalFiles Include="UserCreationPage.xaml" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <MauiXaml Update="Pages\UserCreationPage.xaml">
+      <MauiXaml Update="ViewControllers\UserCreation\UserCreationPage.xaml">
         <SubType>Designer</SubType>
+      </MauiXaml>
+      <MauiXaml Update="ViewControllers\UserCreation\UserDefaultCredentialsPage.xaml">
+        <SubType>Designer</SubType>
+        <DependentUpon>UserCreationPage.xaml</DependentUpon>
+      </MauiXaml>
+      <MauiXaml Update="ViewControllers\UserCreation\PassportPage.xaml">
+        <SubType>Designer</SubType>
+        <DependentUpon>UserCreationPage.xaml</DependentUpon>
+      </MauiXaml>
+      <MauiXaml Update="ViewControllers\UserCreation\EducationDocumentPage.xaml">
+        <SubType>Designer</SubType>
+        <DependentUpon>UserCreationPage.xaml</DependentUpon>
       </MauiXaml>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Pages\UserCreationPage.xaml.cs">
+      <Compile Update="ViewControllers\UserCreation\UserCreationPage.xaml.cs">
         <DependentUpon>UserCreationPage.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="ViewControllers\UserCreation\UserDefaultCredentialsPage.xaml.cs">
+        <DependentUpon>UserDefaultCredentialsPage.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="ViewControllers\UserCreation\PassportPage.xaml.cs">
+        <DependentUpon>PassportPage.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="ViewControllers\UserCreation\EducationDocumentPage.xaml.cs">
+        <DependentUpon>EducationDocumentPage.xaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>
