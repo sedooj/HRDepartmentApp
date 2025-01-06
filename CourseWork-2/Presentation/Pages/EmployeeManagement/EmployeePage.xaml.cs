@@ -1,8 +1,6 @@
-using CourseWork_2.Data.ViewControllers;
-using CourseWork_2.Domain.Models;
 using System.Diagnostics;
-using System.Linq;
 using CourseWork_2.Data.ViewModels;
+using CourseWork_2.Presentation.Util;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
@@ -15,10 +13,18 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             _controller = controller;
             InitializeComponent();
 
-            Title = _controller.SelectedHuman?.UserDefaultCredentials.FirstName + " " +
-                    _controller.SelectedHuman?.UserDefaultCredentials.LastName + " – " + _controller.SelectedHuman?.EmploymentHistoryRecords.Last().PositionAtWork;
-            BindingContext = _controller;
+            Title = "Сотрудник: " + _controller.SelectedHuman?.UserDefaultCredentials.FirstName + " " +
+                    _controller.SelectedHuman?.UserDefaultCredentials.LastName + " - " + _controller.SelectedHuman?.EmploymentHistoryRecords.Last().PositionAtWork! ;
+            
+            EmployeeName = _controller.SelectedHuman?.UserDefaultCredentials.FirstName + " " +
+                           _controller.SelectedHuman?.UserDefaultCredentials.LastName + " " +
+                           _controller.SelectedHuman?.UserDefaultCredentials.SecondName;
+            EmployeeNameLabel.TextColor = EntryUtil.GetInvertedColor(null);
 
+            EmployeePosition = _controller.SelectedHuman?.EmploymentHistoryRecords.Last().PositionAtWork!;
+            EmployeePositionLabel.TextColor = EntryUtil.GetInvertedColor(null);
+            
+            BindingContext = this;
 
             try
             {
@@ -37,6 +43,10 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 Debug.WriteLine($"Error initializing EmployeePage: {ex}");
             }
         }
+
+        public string? EmployeePosition { get; set; }
+
+        public string EmployeeName { get; set; }
 
         private async void OnRewardClicked(object sender, EventArgs e)
         {
