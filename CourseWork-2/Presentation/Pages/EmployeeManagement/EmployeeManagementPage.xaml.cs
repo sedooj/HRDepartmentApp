@@ -150,16 +150,16 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             {
                 if (_controller.SelectedCompany != null)
                 {
-                    var employees = _controller.SelectedCompany.EmployeeUUIDs.Select((uuid, index) =>
+                    var employees = _controller.SelectedCompany.EmployeeUUIDs.Select((id, index) =>
                     {
-                        var employee = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{uuid}");
+                        var employee = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{id}");
                         return new
                         {
                             Number = index + 1,
                             Name = employee?.UserDefaultCredentials.FirstName + " " +
                                    employee?.UserDefaultCredentials.LastName,
                             Position = employee?.EmploymentHistoryRecords.Last().PositionAtWork,
-                            Uuid = uuid
+                            Id = id
                         };
                     }).ToList();
                     EmployeesCollectionView.ItemsSource = employees;

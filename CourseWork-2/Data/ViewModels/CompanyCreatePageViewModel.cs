@@ -36,7 +36,7 @@ public class CompanyCreatePageViewModel
                 return;
             }
             var company = new Company(Guid.NewGuid().ToString(), name, address, phone, new List<string>());
-            _companyService.SaveEntity($"{Config.CompanyStoragePath}{company.Uuid}", company);
+            _companyService.SaveEntity($"{Config.CompanyStoragePath}{company.Id}", company);
             Debug.WriteLine("Company entity created successfully.");
         }
         catch (Exception ex)

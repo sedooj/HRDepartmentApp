@@ -14,7 +14,7 @@ public class HrDepartmentService : IHrDepartment
     public void InviteEmployee(Company company, string humanUuid, string position)
     {
         company.EmployeeUUIDs.Add(humanUuid);
-        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Uuid}", company);
+        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Id}", company);
         var human = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{humanUuid}");
         if (human == null)
         {
@@ -27,7 +27,7 @@ public class HrDepartmentService : IHrDepartment
             rank: EmploymentHistoryRecord.AcademicRank.NoRank,
             workingEndDate: null,
             workingStartDate: DateTime.Now,
-            companyUuid: company.Uuid,
+            companyUuid: company.Id,
             fireReason: "",
             positionAtWork: position,
             rewards: new List<Reward>(),
@@ -41,7 +41,7 @@ public class HrDepartmentService : IHrDepartment
     public void FireEmployee(Company company, string humanUuid, string fireReason)
     {
         company.EmployeeUUIDs.Remove(humanUuid);
-        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Uuid}", company);
+        _companyStorageService.UpdateEntity($"{Config.CompanyStoragePath}{company.Id}", company);
         var human = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{humanUuid}");
         if (human == null)
         {

@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using CourseWork_2.Domain.Models;
-using CourseWork_2.Data.ViewControllers;
 using CourseWork_2.Data.ViewModels;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
@@ -36,16 +35,18 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                         await DisplayAlert("Ошибка", "Введите новую должность", "OK");
                         return;
                     }
+
                     if (_controller.SelectedHuman == null)
                     {
                         Debug.WriteLine("RewardPage, Selected human is null.");
                         return;
                     }
+
                     _controller.PromoteEmployee(_controller.SelectedHuman.Uuid, newPosition);
                 }
                 else
                 {
-                    var reward = new Reward(type: selectedType, date: DateTime.Now);
+                    var reward = new Reward(id: Guid.NewGuid().ToString(), type: selectedType, date: DateTime.Now);
                     _controller.GiveReward(_controller.SelectedHuman!, reward);
 
                     Debug.WriteLine("RewardPage, Reward successfully added.");

@@ -2,8 +2,15 @@ namespace CourseWork_2.Domain.Models;
 
 public sealed class Reward
 {
+    private string _id;
     private DateTime _date;
     private RewardType _type;
+    
+    public string Id
+    {
+        get => _id;
+        set => _id = value;
+    }
 
     public DateTime Date
     {
@@ -17,8 +24,9 @@ public sealed class Reward
         set => _type = value;
     }
 
-    public Reward(RewardType type, DateTime date)
+    public Reward(string id, RewardType type, DateTime date)
     {
+        _id = id;
         _type = type;
         _date = date;
     }

@@ -68,7 +68,7 @@ namespace CourseWork_2.Data.ViewModels
         public void PromoteEmployee(string employeeUuid, string newPosition)
         {
             var promotion = _companyService.PromoteEmployee(employeeUuid, newPosition);
-            if (promotion) GiveReward(SelectedHuman!, new Reward(Reward.RewardType.Promotion, DateTime.Now));
+            if (promotion) GiveReward(SelectedHuman!, new Reward(id: Guid.NewGuid().ToString(), Reward.RewardType.Promotion, DateTime.Now));
             LoadData();
         }
         

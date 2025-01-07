@@ -36,7 +36,7 @@
                             <Label Grid.Column="0" Text="{Binding Number}" VerticalOptions="Center" />
                             <Label Grid.Column="2" Text="{Binding Name}" VerticalOptions="Center" />
                             <Label Grid.Column="3" Text="{Binding Position}" VerticalOptions="Center" />
-                            <Button TextColor="Black" BackgroundColor="LightSkyBlue" Grid.Column="4" Text="Посмотреть" Clicked="OnViewClicked" CommandParameter="{Binding Uuid}" VerticalOptions="Center" />
+                            <Button TextColor="Black" BackgroundColor="LightSkyBlue" Grid.Column="4" Text="Посмотреть" Clicked="OnViewClicked" CommandParameter="{Binding Id}" VerticalOptions="Center" />
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

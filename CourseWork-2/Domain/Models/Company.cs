@@ -2,25 +2,25 @@ namespace CourseWork_2.Domain.Models
 {
     public class Company
     {
-        private string _uuid;
+        private string _id;
         private string _name;
         private string _address;
         private string _phone;
         private List<string> _employeeUUIDs;
 
-        public Company(string uuid, string name, string address, string phone, List<string> employeeUUIDs)
+        public Company(string id, string name, string address, string phone, List<string> employeeUUIDs)
         {
-            _uuid = uuid;
+            _id = id;
             _name = name;
             _address = address;
             _phone = phone;
             _employeeUUIDs = employeeUUIDs;
         }
 
-        public string Uuid
+        public string Id
         {
-            get => _uuid;
-            set => _uuid = value;
+            get => _id;
+            set => _id = value;
         }
 
         public string Name
