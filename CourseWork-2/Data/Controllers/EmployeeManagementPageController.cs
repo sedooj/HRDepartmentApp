@@ -12,7 +12,7 @@ namespace CourseWork_2.Data.Controllers
         private readonly IHrDepartment _hrDepartmentService = new HrDepartmentService();
         private readonly ICompanyService _companyService = new LocalCompanyService();
 
-        private PageComponents? Components { get; set; }
+        public required PageComponents Components { get; set; }
 
         private List<Company>? Companies { get; set; }
 
@@ -33,7 +33,7 @@ namespace CourseWork_2.Data.Controllers
         }
 
 
-        private bool IsEmployee(Company company, Guid humanUuid)
+        private static bool IsEmployee(Company company, Guid humanUuid)
         {
             return company.EmployeeUUIDs.Contains(humanUuid);
         }
@@ -42,12 +42,12 @@ namespace CourseWork_2.Data.Controllers
         {
             if (SelectedCompany == null || SelectedHuman == null ||
                 IsEmployee(SelectedCompany, SelectedHuman.Uuid)) return;
-            _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman.Uuid, Components!.PositionEntry!.Text);
+            _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman.Uuid, Components.PositionEntry.Text);
             LoadData();
             UpdateInviteButtonVisibility();
             LoadEmployees();
             SelectedHuman = null;
-            Components!.HumanPicker!.SelectedIndex = -1;
+            Components.HumanPicker.SelectedIndex = -1;
         }
 
         public void PromoteEmployee(Guid employeeUuid, string newPosition, string reason)
@@ -67,10 +67,10 @@ namespace CourseWork_2.Data.Controllers
 
         private void FireEmployee(Company company, Guid employee, string fireReason)
         {
-            if (!IsEmployee(company, employee)) return;
+            if (IsEmployee(company, employee)) return;
             _hrDepartmentService.FireEmployee(company, employee, fireReason);
             SelectedHuman = null;
-            Components!.HumanPicker!.SelectedIndex = -1;
+            Components.HumanPicker.SelectedIndex = -1;
             LoadData();
         }
 
@@ -87,20 +87,21 @@ namespace CourseWork_2.Data.Controllers
                 FireEmployee(SelectedCompany, employee.Uuid, punishment.Reason);
                 return;
             }
+
             _companyService.PunishEmployee(employee.Uuid, punishment);
             LoadData();
         }
 
         private void LoadHumans()
         {
-            Components!.HumanPicker!.ItemsSource = Humans
+            Components.HumanPicker.ItemsSource = Humans
                 ?.Select(h => h.UserDefaultCredentials.FirstName + " " + h.UserDefaultCredentials.LastName).ToList();
         }
 
         private void LoadCompanies()
         {
             var companyNames = Companies?.Select(c => c.Name).ToList();
-            Components!.CompanyPicker!.ItemsSource = companyNames;
+            Components.CompanyPicker.ItemsSource = companyNames;
         }
 
         public void UpdatePickers()
@@ -125,7 +126,7 @@ namespace CourseWork_2.Data.Controllers
                         Id = id
                     };
                 }).ToList();
-                Components!.EmployeesCollectionView!.ItemsSource = employees;
+                Components.EmployeesCollectionView.ItemsSource = employees;
             }
         }
 
@@ -135,16 +136,16 @@ namespace CourseWork_2.Data.Controllers
                              SelectedCompany != null &&
                              !IsEmployee(SelectedCompany, SelectedHuman.Uuid);
 
-            Components!.InviteButton!.IsVisible = isVisible;
-            Components!.PositionEntry!.IsVisible = isVisible;
+            Components.InviteButton.IsVisible = isVisible;
+            Components.PositionEntry.IsVisible = isVisible;
         }
 
         public void OnCompanySelect()
         {
-            SelectedCompany = Companies?[Components!.CompanyPicker!.SelectedIndex];
-            bool isCompanySelected = SelectedCompany != null;
-            Components!.TableFrame!.IsVisible = isCompanySelected;
-            Components.CompanyEmployeesLabel!.IsVisible = isCompanySelected;
+            SelectedCompany = Companies?[Components.CompanyPicker.SelectedIndex];
+            var isCompanySelected = SelectedCompany != null;
+            Components.TableFrame.IsVisible = isCompanySelected;
+            Components.CompanyEmployeesLabel.IsVisible = isCompanySelected;
             UpdateInviteButtonVisibility();
             UpdatePickers();
             LoadEmployees();
@@ -152,7 +153,7 @@ namespace CourseWork_2.Data.Controllers
 
         public void OnHumanSelect()
         {
-            if (!(Components!.HumanPicker?.SelectedIndex >= 0) ||
+            if (!(Components.HumanPicker.SelectedIndex >= 0) ||
                 !(Components.HumanPicker.SelectedIndex < Humans?.Count)) return;
             SelectedHuman = Humans?[Components.HumanPicker.SelectedIndex];
             UpdateInviteButtonVisibility();
@@ -203,12 +204,12 @@ namespace CourseWork_2.Data.Controllers
 
     public class PageComponents
     {
-        public Picker? CompanyPicker { get; init; }
-        public Picker? HumanPicker { get; init; }
-        public Button? InviteButton { get; init; }
-        public Entry? PositionEntry { get; init; }
-        public CollectionView? EmployeesCollectionView { get; init; }
-        public Frame? TableFrame { get; init; }
-        public Label? CompanyEmployeesLabel { get; init; }
+        public required Picker CompanyPicker { get; init; }
+        public required Picker HumanPicker { get; init; }
+        public required Button InviteButton { get; init; }
+        public required Entry PositionEntry { get; init; }
+        public required CollectionView EmployeesCollectionView { get; init; }
+        public required Frame TableFrame { get; init; }
+        public required Label CompanyEmployeesLabel { get; init; }
     }
 }
