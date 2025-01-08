@@ -40,7 +40,8 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Label Text="{Binding Punishments.Count, StringFormat='Взыскания ({0}):'}"  FontSize="Medium" FontAttributes="Bold" />
+
+            <Label Text="{Binding Punishments.Count, StringFormat='Взыскания ({0}):'}" FontSize="Medium" FontAttributes="Bold" />
             <CollectionView ItemsSource="{Binding Punishments}" ItemsLayout="HorizontalList" HeightRequest="150">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -55,6 +56,32 @@
                                     <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" FontSize="Medium" />
                                     <Label Text="Причина:" FontSize="Small" FontAttributes="Bold" />
                                     <Label Text="{Binding Reason}" FontSize="Medium" />
+                                </StackLayout>
+                            </ScrollView>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Text="{Binding CareerMoves.Count, StringFormat='Карьера ({0}):'}" FontSize="Medium" FontAttributes="Bold" />
+            <CollectionView ItemsSource="{Binding CareerMoves}" ItemsLayout="HorizontalList" HeightRequest="150">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="Black" Padding="5" Margin="5" HeightRequest="150" WidthRequest="150">
+                            <ScrollView>
+                                <StackLayout Spacing="5">
+                                    <Label Text="ID:" FontSize="Small" FontAttributes="Bold" />
+                                    <Label Text="{Binding Id}" FontSize="Small" />
+                                    <Label Text="Тип:" FontSize="Small" FontAttributes="Bold" />
+                                    <Label Text="{Binding Move}" FontSize="Medium" />
+                                    <Label Text="Дата:" FontSize="Small" FontAttributes="Bold" />
+                                    <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" FontSize="Medium" />
+                                    <Label Text="Причина:" FontSize="Small" FontAttributes="Bold" />
+                                    <Label Text="{Binding Reason}" FontSize="Medium" />
+                                    <Label Text="С:" FontSize="Small" FontAttributes="Bold" />
+                                    <Label Text="{Binding PositionFrom}" FontSize="Medium" />
+                                    <Label Text="На:" FontSize="Small" FontAttributes="Bold" />
+                                    <Label Text="{Binding PositionTo}" FontSize="Medium" />
                                 </StackLayout>
                             </ScrollView>
                         </Frame>
