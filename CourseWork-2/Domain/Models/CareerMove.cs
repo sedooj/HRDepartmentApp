@@ -4,12 +4,12 @@ public sealed class CareerMove
 {
     private MoveType _move;
     private string _reason;
-    private long _date;
-    private long _id;
+    private DateTime _date;
+    private string _id;
     private string _positionFrom;
     private string _positionTo;
 
-    public CareerMove(MoveType move, string reason, long date, long id, string positionFrom, string positionTo)
+    public CareerMove(MoveType move, string reason, DateTime date, string id, string positionFrom, string positionTo)
     {
         _move = move;
         _reason = reason;
@@ -21,8 +21,8 @@ public sealed class CareerMove
 
     public MoveType Move => _move;
     public string Reason => _reason;
-    public long Date => _date;
-    public long Id => _id;
+    public DateTime Date => _date;
+    public string Id => _id;
     public string PositionFrom => _positionFrom;
     public string PositionTo => _positionTo;
 
@@ -30,6 +30,8 @@ public sealed class CareerMove
     {
         None,
         Promotion,
-        Demotion
+        Demotion,
+        Invite,
+        Fire
     }
 }

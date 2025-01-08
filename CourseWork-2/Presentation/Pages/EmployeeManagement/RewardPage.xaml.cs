@@ -29,6 +29,12 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 
                 if (selectedType == Reward.RewardType.Promotion)
                 {
+                    if (_controller.SelectedHuman == null)
+                    {
+                        Debug.WriteLine("RewardPage, Selected human is null.");
+                        return;
+                    }
+                    
                     string newPosition = await DisplayPromptAsync("Повышение", "Введите новую должность:");
                     if (string.IsNullOrEmpty(newPosition))
                     {
@@ -36,17 +42,24 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                         return;
                     }
 
-                    if (_controller.SelectedHuman == null)
+                    string reason = await DisplayPromptAsync("Повышение", "Введите причину:");
+                    if (string.IsNullOrEmpty(reason))
                     {
-                        Debug.WriteLine("RewardPage, Selected human is null.");
+                        await DisplayAlert("Ошибка", "Введите причину повышения", "OK");
                         return;
-                    }
+                    }       
 
-                    _controller.PromoteEmployee(_controller.SelectedHuman.Uuid, newPosition);
+                    _controller.PromoteEmployee(_controller.SelectedHuman.Uuid, newPosition, reason);
                 }
                 else
                 {
-                    var reward = new Reward(id: Guid.NewGuid().ToString(), type: selectedType, date: DateTime.Now);
+                    string reason = await DisplayPromptAsync("Повышение", "Введите причину:");
+                    if (string.IsNullOrEmpty(reason))
+                    {
+                        await DisplayAlert("Ошибка", "Введите причину повышения", "OK");
+                        return;
+                    } 
+                    var reward = new Reward(id: Guid.NewGuid().ToString(), type: selectedType, date: DateTime.Now, reason: reason);
                     _controller.GiveReward(_controller.SelectedHuman!, reward);
 
                     Debug.WriteLine("RewardPage, Reward successfully added.");

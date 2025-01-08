@@ -65,10 +65,10 @@ namespace CourseWork_2.Data.ViewModels
             }
         }
 
-        public void PromoteEmployee(string employeeUuid, string newPosition)
+        public void PromoteEmployee(string employeeUuid, string newPosition, string reason)
         {
-            var promotion = _companyService.PromoteEmployee(employeeUuid, newPosition);
-            if (promotion) GiveReward(SelectedHuman!, new Reward(id: Guid.NewGuid().ToString(), Reward.RewardType.Promotion, DateTime.Now));
+            var promotion = _companyService.PromoteEmployee(employeeUuid, newPosition, reason);
+            if (promotion) GiveReward(SelectedHuman!, new Reward(id: Guid.NewGuid().ToString(), Reward.RewardType.Promotion, DateTime.Now, reason));
             LoadData();
         }
         
