@@ -80,7 +80,7 @@ public partial class PunishmentPage
                     return;
                 }
 
-                var punishment = new Punishment(type: selectedType, date: DateTime.Now, reason: reason);
+                var punishment = new Punishment(id: Guid.NewGuid().ToString(), selectedType, date: DateTime.Now, reason: reason);
                 _controller.PunishEmployee(_controller.SelectedHuman!, punishment);
             }
 

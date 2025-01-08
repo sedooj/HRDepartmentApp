@@ -2,9 +2,17 @@ namespace CourseWork_2.Domain.Models;
 
 public sealed class Punishment
 {
+    private string _id;
     private PunishmentType _type;
     private DateTime _date;
     private string _reason;
+    
+    public string Id
+    {
+        get => _id;
+        set => _id = value;
+    }
+    
     public PunishmentType Type
     {
         get => _type;
@@ -23,8 +31,9 @@ public sealed class Punishment
         set => _reason = value;
     }
     
-    public Punishment(PunishmentType type, DateTime date, string reason)
+    public Punishment(string id, PunishmentType type, DateTime date, string reason)
     {
+        _id = id;
         _type = type;
         _date = date;
         _reason = reason;

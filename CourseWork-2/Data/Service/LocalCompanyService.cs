@@ -59,7 +59,7 @@ namespace CourseWork_2.Data.Service
                 return false;
             }
 
-            var punishment = new Punishment(Punishment.PunishmentType.Demotion, DateTime.Now, reason);
+            var punishment = new Punishment(id: Guid.NewGuid().ToString(), Punishment.PunishmentType.Demotion, DateTime.Now, reason);
             employee.EmploymentHistoryRecords.Last().Punishments.Add(punishment);
             employee.EmploymentHistoryRecords.Last().PositionAtWork = newPosition;
             _humanService.SaveEntity($"{Config.HumanStoragePath}{employee.Uuid}", employee);
