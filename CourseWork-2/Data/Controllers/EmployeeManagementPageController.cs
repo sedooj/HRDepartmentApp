@@ -14,11 +14,11 @@ namespace CourseWork_2.Data.Controllers
 
         private PageComponents Components { get; set; }
 
-        public List<Company>? Companies { get; set; }
+        private List<Company>? Companies { get; set; }
 
-        public List<Human>? Humans { get; set; }
+        private List<Human>? Humans { get; set; }
 
-        public Company? SelectedCompany { get; set; }
+        private Company? SelectedCompany { get; set; }
 
         public Human? SelectedHuman { get; set; }
 
@@ -41,7 +41,7 @@ namespace CourseWork_2.Data.Controllers
         public void InviteEmployee()
         {
             if (SelectedCompany == null || SelectedHuman == null ||
-                IsEmployee(SelectedCompany, SelectedHuman.Uuid)) return;
+                IsEmployee(SelectedCompany, SelectedHuman.Uuid) || Components.PositionEntry.Text.Length == 0) return;
             _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman.Uuid, Components.PositionEntry.Text);
             LoadData();
             UpdateInviteButtonVisibility();
@@ -65,7 +65,7 @@ namespace CourseWork_2.Data.Controllers
             LoadData();
         }
 
-        public void FireEmployee(Company company, Guid employee, string fireReason)
+        private void FireEmployee(Company company, Guid employee, string fireReason)
         {
             if (!IsEmployee(company, employee)) return;
             _hrDepartmentService.FireEmployee(company, employee, fireReason);
