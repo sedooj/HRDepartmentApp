@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using CourseWork_2.Data.Controllers;
 using CourseWork_2.Domain.Models;
 
@@ -16,62 +15,45 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 
         private async void OnSaveClicked(object sender, EventArgs e)
         {
-            try
+            if (RewardTypePicker.SelectedIndex == -1)
             {
-                if (RewardTypePicker.SelectedIndex == -1)
+                await DisplayAlert("Ошибка", "Выберите награду", "OK");
+                return;
+            }
+
+            var selectedType = (Reward.RewardType)RewardTypePicker.SelectedIndex;
+            if (selectedType == Reward.RewardType.Promotion)
+            {
+                if (_controller.SelectedHuman == null) return;
+                string newPosition = await DisplayPromptAsync(selectedType.ToString(), "Введите новую должность:");
+                if (string.IsNullOrEmpty(newPosition))
                 {
-                    Debug.WriteLine("RewardPage, Reward type not selected.");
-                    await DisplayAlert("Ошибка", "Выберите награду", "OK");
+                    await DisplayAlert("Ошибка", "Введите новую должность", "OK");
                     return;
                 }
 
-                var selectedType = (Reward.RewardType)RewardTypePicker.SelectedIndex;
-
-                if (selectedType == Reward.RewardType.Promotion)
+                string reason = await DisplayPromptAsync(selectedType.ToString(), "Введите причину:");
+                if (string.IsNullOrEmpty(reason))
                 {
-                    if (_controller.SelectedHuman == null)
-                    {
-                        Debug.WriteLine("RewardPage, Selected human is null.");
-                        return;
-                    }
-                    
-                    string newPosition = await DisplayPromptAsync(selectedType.ToString(), "Введите новую должность:");
-                    if (string.IsNullOrEmpty(newPosition))
-                    {
-                        await DisplayAlert("Ошибка", "Введите новую должность", "OK");
-                        return;
-                    }
-
-                    string reason = await DisplayPromptAsync(selectedType.ToString(), "Введите причину:");
-                    if (string.IsNullOrEmpty(reason))
-                    {
-                        await DisplayAlert("Ошибка", "Введите причину повышения", "OK");
-                        return;
-                    }       
-
-                    _controller.PromoteEmployee(_controller.SelectedHuman.Uuid, newPosition, reason);
-                }
-                else
-                {
-                    string reason = await DisplayPromptAsync(selectedType.ToString(), "Введите причину:");
-                    if (string.IsNullOrEmpty(reason))
-                    {
-                        await DisplayAlert("Ошибка", "Введите причину повышения", "OK");
-                        return;
-                    } 
-                    var reward = new Reward(id: Guid.NewGuid().ToString(), type: selectedType, date: DateTime.Now, reason: reason);
-                    _controller.GiveReward(_controller.SelectedHuman!, reward);
-
-                    Debug.WriteLine("RewardPage, Reward successfully added.");
+                    await DisplayAlert("Ошибка", "Введите причину повышения", "OK");
+                    return;
                 }
 
-                await Navigation.PopAsync();
+                _controller.PromoteEmployee(_controller.SelectedHuman.Uuid, newPosition, reason);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Error in OnSaveClicked: {ex.Message}");
-                await DisplayAlert("Ошибка", "Ошибка выдачи награды", "OK");
+                string reason = await DisplayPromptAsync(selectedType.ToString(), "Введите причину:");
+                if (string.IsNullOrEmpty(reason))
+                {
+                    await DisplayAlert("Ошибка", "Введите причину повышения", "OK");
+                    return;
+                } 
+                var reward = new Reward(id: Guid.NewGuid().ToString(), type: selectedType, date: DateTime.Now, reason: reason);
+                _controller.GiveReward(_controller.SelectedHuman!, reward);
             }
+
+            await Navigation.PopAsync();
         }
     }
 }
