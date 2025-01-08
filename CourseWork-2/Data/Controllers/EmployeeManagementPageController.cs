@@ -1,8 +1,6 @@
-using System.Diagnostics;
 using CourseWork_2.Data.Service;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Domain.Service;
-using CourseWork_2.Presentation.Pages.EmployeeManagement;
 using CourseWork_2.Presentation.Util;
 
 namespace CourseWork_2.Data.Controllers
@@ -14,35 +12,15 @@ namespace CourseWork_2.Data.Controllers
         private readonly IHrDepartment _hrDepartmentService = new HrDepartmentService();
         private readonly ICompanyService _companyService = new LocalCompanyService();
 
-        private List<Company>? _companies;
-        private List<Human>? _humans;
-        private Human? _selectedHuman;
-        private Company? _selectedCompany;
+        private PageComponents? Components { get; set; }
 
+        private List<Company>? Companies { get; set; }
 
-        public List<Company>? Companies
-        {
-            get => _companies;
-            set { _companies = value; }
-        }
+        private List<Human>? Humans { get; set; }
 
-        public List<Human>? Humans
-        {
-            get => _humans;
-            set { _humans = value; }
-        }
+        private Company? SelectedCompany { get; set; }
 
-        public Company? SelectedCompany
-        {
-            get => _selectedCompany;
-            set { _selectedCompany = value; }
-        }
-
-        public Human? SelectedHuman
-        {
-            get => _selectedHuman;
-            set { _selectedHuman = value; }
-        }
+        public Human? SelectedHuman { get; set; }
 
         public void LoadData()
         {
@@ -55,22 +33,21 @@ namespace CourseWork_2.Data.Controllers
         }
 
 
-        public bool IsEmployee(Company company, Guid humanUuid)
+        private bool IsEmployee(Company company, Guid humanUuid)
         {
             return company.EmployeeUUIDs.Contains(humanUuid);
         }
 
-        public void InviteEmployee(Entry position, Button inviteButton, Entry positionEntry,
-            CollectionView employeesCollectionView, Picker humanPicker)
+        public void InviteEmployee()
         {
             if (SelectedCompany == null || SelectedHuman == null ||
                 IsEmployee(SelectedCompany, SelectedHuman.Uuid)) return;
-            _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman.Uuid, position.Text);
-            SelectedHuman = null;
+            _hrDepartmentService.InviteEmployee(SelectedCompany, SelectedHuman.Uuid, Components!.PositionEntry!.Text);
             LoadData();
-            UpdateInviteButtonVisibility(inviteButton, positionEntry);
-            LoadEmployees(employeesCollectionView);
-            humanPicker.SelectedIndex = -1;
+            UpdateInviteButtonVisibility();
+            LoadEmployees();
+            SelectedHuman = null;
+            Components!.HumanPicker!.SelectedIndex = -1;
         }
 
         public void PromoteEmployee(Guid employeeUuid, string newPosition, string reason)
@@ -88,98 +65,51 @@ namespace CourseWork_2.Data.Controllers
             LoadData();
         }
 
-        public void FireEmployee(Company company, Guid employee, string fireReason)
+        private void FireEmployee(Company company, Guid employee, string fireReason)
         {
             if (!IsEmployee(company, employee)) return;
             _hrDepartmentService.FireEmployee(company, employee, fireReason);
+            SelectedHuman = null;
+            Components!.HumanPicker!.SelectedIndex = -1;
             LoadData();
         }
 
         public void GiveReward(Human employee, Reward reward)
         {
-            try
-            {
-                if (SelectedCompany != null)
-                {
-                    bool result = _companyService.RewardEmployee(employee.Uuid, reward);
-                    if (result)
-                    {
-                        Console.WriteLine("Reward successfully given to employee.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Failed to give reward to employee.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("SelectedCompany is null.");
-                }
-
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in GiveReward: {ex.Message}");
-            }
+            _companyService.RewardEmployee(employee.Uuid, reward);
         }
 
         public void PunishEmployee(Human employee, Punishment punishment)
         {
-            try
+            if (SelectedCompany == null) return;
+            if (punishment.Type == Punishment.PunishmentType.Fire)
             {
-                if (SelectedCompany != null)
-                {
-                    if (punishment.Type == Punishment.PunishmentType.Fire)
-                    {
-                        FireEmployee(SelectedCompany, employee.Uuid, punishment.Reason);
-                        return;
-                    }
-                    else
-                    {
-                        bool result = _companyService.PunishEmployee(employee.Uuid, punishment);
-                        if (result)
-                        {
-                            Console.WriteLine("Punishment successfully given to employee.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Failed to give punishment to employee.");
-                        }
-                    }
-
-                    LoadData();
-                }
-                else
-                {
-                    Console.WriteLine("SelectedCompany is null.");
-                }
+                FireEmployee(SelectedCompany, employee.Uuid, punishment.Reason);
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in PunishEmployee: {ex.Message}");
-            }
+            _companyService.PunishEmployee(employee.Uuid, punishment);
+            LoadData();
         }
 
-        private void LoadHumans(Picker humansPicker)
+        private void LoadHumans()
         {
-            humansPicker.ItemsSource = Humans
+            Components!.HumanPicker!.ItemsSource = Humans
                 ?.Select(h => h.UserDefaultCredentials.FirstName + " " + h.UserDefaultCredentials.LastName).ToList();
         }
 
-        private void LoadCompanies(Picker companyPicker)
+        private void LoadCompanies()
         {
             var companyNames = Companies?.Select(c => c.Name).ToList();
-            companyPicker.ItemsSource = companyNames;
+            Components!.CompanyPicker!.ItemsSource = companyNames;
         }
 
-        public void UpdatePickers(Picker companyPicker, Picker humansPicker)
+        public void UpdatePickers()
         {
-            LoadCompanies(companyPicker);
-            LoadHumans(humansPicker);
+            LoadCompanies();
+            LoadHumans();
         }
 
-        public void LoadEmployees(CollectionView employeesCollectionView)
+        private void LoadEmployees()
         {
             if (SelectedCompany != null)
             {
@@ -195,49 +125,45 @@ namespace CourseWork_2.Data.Controllers
                         Id = id
                     };
                 }).ToList();
-                employeesCollectionView.ItemsSource = employees;
+                Components!.EmployeesCollectionView!.ItemsSource = employees;
             }
         }
 
-        public void UpdateInviteButtonVisibility(Button inviteButton, Entry positionEntry)
+        private void UpdateInviteButtonVisibility()
         {
             bool isVisible = SelectedHuman != null &&
                              SelectedCompany != null &&
                              !IsEmployee(SelectedCompany, SelectedHuman.Uuid);
 
-            inviteButton.IsVisible = isVisible;
-            positionEntry.IsVisible = isVisible;
+            Components!.InviteButton!.IsVisible = isVisible;
+            Components!.PositionEntry!.IsVisible = isVisible;
         }
 
-        public void OnCompanySelect(Picker companyPicker, Picker humanPicker, Frame tableFrame,
-            Label companyEmployeesLabel, Button inviteButton, Entry positionEntry,
-            CollectionView employeesCollectionView)
+        public void OnCompanySelect()
         {
-            SelectedCompany = Companies?[companyPicker.SelectedIndex];
+            SelectedCompany = Companies?[Components!.CompanyPicker!.SelectedIndex];
             bool isCompanySelected = SelectedCompany != null;
-            tableFrame.IsVisible = isCompanySelected;
-            companyEmployeesLabel.IsVisible = isCompanySelected;
-            UpdateInviteButtonVisibility(inviteButton, positionEntry);
-            UpdatePickers(companyPicker, humanPicker);
-            LoadEmployees(employeesCollectionView);
+            Components!.TableFrame!.IsVisible = isCompanySelected;
+            Components.CompanyEmployeesLabel!.IsVisible = isCompanySelected;
+            UpdateInviteButtonVisibility();
+            UpdatePickers();
+            LoadEmployees();
         }
 
-        public void OnHumanSelect(Button inviteButton, Entry positionEntry, Picker humanPicker)
+        public void OnHumanSelect()
         {
-            if (humanPicker.SelectedIndex >= 0 && humanPicker.SelectedIndex < Humans?.Count)
-            {
-                SelectedHuman = Humans?[humanPicker.SelectedIndex];
-                UpdateInviteButtonVisibility(inviteButton, positionEntry);
-            }
+            if (!(Components!.HumanPicker?.SelectedIndex >= 0) ||
+                !(Components.HumanPicker.SelectedIndex < Humans?.Count)) return;
+            SelectedHuman = Humans?[Components.HumanPicker.SelectedIndex];
+            UpdateInviteButtonVisibility();
         }
 
-        public void OnAppearing(Picker companyPicker, Picker humanPicker, Button inviteButton, Entry positionEntry,
-            CollectionView employeesCollectionView)
+        public void OnAppearing()
         {
             LoadData();
-            UpdatePickers(companyPicker, humanPicker);
-            LoadEmployees(employeesCollectionView);
-            UpdateInviteButtonVisibility(inviteButton, positionEntry);
+            UpdatePickers();
+            LoadEmployees();
+            UpdateInviteButtonVisibility();
         }
 
         public bool OnViewClicked(object sender)
@@ -257,5 +183,32 @@ namespace CourseWork_2.Data.Controllers
 
             return false;
         }
+
+        public void InitComponents(Picker companyPicker, Picker humanPicker, Button inviteButton, Entry positionEntry,
+            CollectionView employeesCollectionView
+            , Frame tableFrame, Label companyEmployeesLabel)
+        {
+            Components = new PageComponents
+            {
+                CompanyPicker = companyPicker,
+                HumanPicker = humanPicker,
+                PositionEntry = positionEntry,
+                EmployeesCollectionView = employeesCollectionView,
+                TableFrame = tableFrame,
+                CompanyEmployeesLabel = companyEmployeesLabel,
+                InviteButton = inviteButton
+            };
+        }
+    }
+
+    public class PageComponents
+    {
+        public Picker? CompanyPicker { get; init; }
+        public Picker? HumanPicker { get; init; }
+        public Button? InviteButton { get; init; }
+        public Entry? PositionEntry { get; init; }
+        public CollectionView? EmployeesCollectionView { get; init; }
+        public Frame? TableFrame { get; init; }
+        public Label? CompanyEmployeesLabel { get; init; }
     }
 }

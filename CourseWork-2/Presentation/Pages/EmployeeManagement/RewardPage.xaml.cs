@@ -35,14 +35,14 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                         return;
                     }
                     
-                    string newPosition = await DisplayPromptAsync("Повышение", "Введите новую должность:");
+                    string newPosition = await DisplayPromptAsync(selectedType.ToString(), "Введите новую должность:");
                     if (string.IsNullOrEmpty(newPosition))
                     {
                         await DisplayAlert("Ошибка", "Введите новую должность", "OK");
                         return;
                     }
 
-                    string reason = await DisplayPromptAsync("Повышение", "Введите причину:");
+                    string reason = await DisplayPromptAsync(selectedType.ToString(), "Введите причину:");
                     if (string.IsNullOrEmpty(reason))
                     {
                         await DisplayAlert("Ошибка", "Введите причину повышения", "OK");
@@ -53,7 +53,7 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 }
                 else
                 {
-                    string reason = await DisplayPromptAsync("Повышение", "Введите причину:");
+                    string reason = await DisplayPromptAsync(selectedType.ToString(), "Введите причину:");
                     if (string.IsNullOrEmpty(reason))
                     {
                         await DisplayAlert("Ошибка", "Введите причину повышения", "OK");

@@ -14,29 +14,30 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 
         private void InitPage()
         {
+            _controller.InitComponents(CompanyPicker, HumanPicker, InviteButton, PositionEntry, EmployeesCollectionView, TableFrame, CompanyEmployeesLabel);
             _controller.LoadData();
-            _controller.UpdatePickers(CompanyPicker, HumanPicker);
+            _controller.UpdatePickers();
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            _controller.OnAppearing(CompanyPicker, HumanPicker, InviteButton, PositionEntry, EmployeesCollectionView);
+            _controller.OnAppearing();
         }
 
         private void OnInviteClicked(object sender, EventArgs e)
         {
-            _controller.InviteEmployee(PositionEntry, InviteButton, PositionEntry, EmployeesCollectionView, HumanPicker);
+            _controller.InviteEmployee();
         }
 
         private void OnCompanySelected(object sender, EventArgs e)
         {
-            _controller.OnCompanySelect(CompanyPicker, HumanPicker, TableFrame, CompanyEmployeesLabel, InviteButton, PositionEntry, EmployeesCollectionView);
+            _controller.OnCompanySelect();
         }
 
         private void OnHumanSelected(object sender, EventArgs e)
         {
-            _controller.OnHumanSelect(InviteButton, PositionEntry, HumanPicker);
+            _controller.OnHumanSelect();
         }
         
         private async void OnViewClicked(object sender, EventArgs e)
