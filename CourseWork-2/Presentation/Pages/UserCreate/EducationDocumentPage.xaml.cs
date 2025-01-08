@@ -7,12 +7,12 @@ namespace CourseWork_2.Presentation.Pages.UserCreate;
 public partial class EducationDocumentPage
 {
     private readonly EducationDocumentPageController _pageController = new();
-    private readonly UserCreationPageController _userCreationModel;
+    private readonly UserCreationPageController _userCreationPageController;
 
-    public EducationDocumentPage(HumanDataHolder humanData, UserCreationPageController userCreationModel)
+    public EducationDocumentPage(HumanDataHolder humanData, UserCreationPageController userCreationPageController)
     {
         InitializeComponent();
-        _userCreationModel = userCreationModel;
+        _userCreationPageController = userCreationPageController;
         Init(humanData);
     }
 
@@ -69,7 +69,7 @@ public partial class EducationDocumentPage
             DateOfIssueDatePicker.Date
         );
 
-        _userCreationModel.UpdateEducationDocument(educationDocument);
+        _userCreationPageController.UpdateEducationDocument(educationDocument);
         await Navigation.PopAsync();
     }
 }
