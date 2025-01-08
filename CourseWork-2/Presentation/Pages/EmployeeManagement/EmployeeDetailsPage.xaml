@@ -32,6 +32,8 @@
                                     <Label Text="{Binding Type}" FontSize="Medium" />
                                     <Label Text="Дата:" FontSize="Small" FontAttributes="Bold" />
                                     <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" FontSize="Medium" />
+                                    <Label Text="Причина:" FontSize="Small" FontAttributes="Bold" />
+                                    <Label Text="{Binding Reason}" FontSize="Medium" />
                                 </StackLayout>
                             </ScrollView>
                         </Frame>
