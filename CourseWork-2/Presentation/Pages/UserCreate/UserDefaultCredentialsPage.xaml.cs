@@ -6,12 +6,12 @@ namespace CourseWork_2.Presentation.Pages.UserCreate;
 public partial class UserDefaultCredentialsPage
 {
     private readonly UserDefaultCredentialsPageController _pageController = new();
-    private readonly UserCreationPageController _userCreationModel;
+    private readonly UserCreationPageController _userCreationController;
 
-    public UserDefaultCredentialsPage(HumanDataHolder humanData, UserCreationPageController userCreationModel)
+    public UserDefaultCredentialsPage(HumanDataHolder humanData, UserCreationPageController userCreationController)
     {
         InitializeComponent();
-        _userCreationModel = userCreationModel;
+        _userCreationController = userCreationController;
         Init(humanData);
     }
 
@@ -74,7 +74,7 @@ public partial class UserDefaultCredentialsPage
             ""
         );
 
-        _userCreationModel.UpdateUserDefaultCredentials(userDefaultCredentials);
+        _userCreationController.UpdateUserDefaultCredentials(userDefaultCredentials);
         await Navigation.PopAsync();
     }
 }
