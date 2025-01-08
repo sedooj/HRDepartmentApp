@@ -1,12 +1,11 @@
-using System.Diagnostics;
 using CourseWork_2.Data.Controllers;
-using CourseWork_2.Presentation.Util;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
     public partial class EmployeePage
     {
         private readonly EmployeeManagementPageController _controller;
+        private readonly EmployeePageController _employeePageController = new();
 
         public EmployeePage(EmployeeManagementPageController controller)
         {
@@ -17,89 +16,25 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 
         private void Init()
         {
-            Title = "Сотрудник: " + _controller.SelectedHuman?.UserDefaultCredentials.FirstName + " " +
-                    _controller.SelectedHuman?.UserDefaultCredentials.LastName + " - " + _controller.SelectedHuman?.LastEmploymentHistoryRecord.PositionAtWork! ;
-            
-            EmployeeName = _controller.SelectedHuman?.UserDefaultCredentials.FirstName + " " +
-                           _controller.SelectedHuman?.UserDefaultCredentials.LastName + " " +
-                           _controller.SelectedHuman?.UserDefaultCredentials.SecondName;
-            EmployeeNameLabel.TextColor = EntryUtil.GetInvertedColor(null);
-
-            EmployeePosition = _controller.SelectedHuman?.LastEmploymentHistoryRecord.PositionAtWork!;
-            EmployeePositionLabel.TextColor = EntryUtil.GetInvertedColor(null);
-            
             BindingContext = this;
-
-            try
-            {
-                Debug.WriteLine("Initializing EmployeePage...");
-                EmploymentHistoryCollectionView.ItemsSource = _controller.SelectedHuman?.EmploymentHistoryRecords
-                    .Select((record, index) => new
-                    {
-                        Index = index + 1,
-                        record.PositionAtWork,
-                        WorkingPeriod = $"{record.WorkingStartDate:dd-MM-yyyy} - {(record.WorkingEndDate.HasValue ? record.WorkingEndDate.Value.ToString("dd.MM.yyyy") : " Нынешнее время")}"
-                    }).ToList();
-                Debug.WriteLine("EmployeePage initialized successfully.");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error initializing EmployeePage: {ex}");
-            }
+            _employeePageController.InitPage(_controller, EmploymentHistoryCollectionView, EmployeeNameLabel, EmployeePositionLabel); 
         }
-
-        public string? EmployeePosition { get; set; }
-
-        public string EmployeeName { get; set; }
 
         private async void OnRewardClicked(object sender, EventArgs e)
         {
-            try
-            {
-                await Navigation.PushAsync(new RewardPage(_controller));
-                Debug.WriteLine("OnRewardClicked executed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in OnRewardClicked: {ex}");
-            }
+            await Navigation.PushAsync(new RewardPage(_controller));
         }
 
         private async void OnPunishClicked(object sender, EventArgs e)
         {
-            try
-            {
-                await Navigation.PushAsync(new PunishmentPage(_controller));
-                Debug.WriteLine("OnPunishClicked executed successfully.");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in OnPunishClicked: {ex}");
-            }
+            await Navigation.PushAsync(new PunishmentPage(_controller));
         }
 
         private async void OnViewDetailsClicked(object sender, EventArgs e)
         {
-            try
-            {
-                Debug.WriteLine("OnViewDetailsClicked started.");
-                var button = sender as Button;
-                if (button?.CommandParameter is int index)
-                {
-                    var record = _controller.SelectedHuman?.EmploymentHistoryRecords.ElementAtOrDefault(index - 1);
-                    if (record == null)
-                    {
-                        Debug.WriteLine("Error while OnViewDetailsClicked. Record is null.");
-                        return;
-                    }
-                    await Navigation.PushAsync(new EmployeeDetailsPage(record));
-                    Debug.WriteLine("OnViewDetailsClicked executed successfully.");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in OnViewDetailsClicked: {ex}");
-            }
+            var record = _employeePageController.OnViewDetailsClicked(sender, _controller);
+            if (record == null) return;
+            await Navigation.PushAsync(new EmployeeDetailsPage(record));
         }
     }
 }

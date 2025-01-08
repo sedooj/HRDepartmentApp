@@ -55,9 +55,9 @@ public class HrDepartmentService : IHrDepartment
             return;
         }
 
-        human.LastEmploymentHistoryRecord.WorkingEndDate = DateTime.Now;
-        human.LastEmploymentHistoryRecord.FireReason = fireReason;
-        human.LastEmploymentHistoryRecord.CareerMoves.Append(new(CareerMove.MoveType.Invite, fireReason, DateTime.Now,
+        human.LastEmploymentHistoryRecord!.WorkingEndDate = DateTime.Now;
+        human.LastEmploymentHistoryRecord!.FireReason = fireReason;
+        human.LastEmploymentHistoryRecord!.CareerMoves.Append(new(CareerMove.MoveType.Invite, fireReason, DateTime.Now,
             Guid.NewGuid(),
             human.LastEmploymentHistoryRecord.PositionAtWork, ""));
         _humanStorageService.UpdateEntity($"{Config.HumanStoragePath}{humanUuid.ToString()}", human);

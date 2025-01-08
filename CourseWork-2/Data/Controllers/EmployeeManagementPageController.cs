@@ -12,13 +12,13 @@ namespace CourseWork_2.Data.Controllers
         private readonly IHrDepartment _hrDepartmentService = new HrDepartmentService();
         private readonly ICompanyService _companyService = new LocalCompanyService();
 
-        public required PageComponents Components { get; set; }
+        private PageComponents Components { get; set; }
 
-        private List<Company>? Companies { get; set; }
+        public List<Company>? Companies { get; set; }
 
-        private List<Human>? Humans { get; set; }
+        public List<Human>? Humans { get; set; }
 
-        private Company? SelectedCompany { get; set; }
+        public Company? SelectedCompany { get; set; }
 
         public Human? SelectedHuman { get; set; }
 
@@ -65,9 +65,9 @@ namespace CourseWork_2.Data.Controllers
             LoadData();
         }
 
-        private void FireEmployee(Company company, Guid employee, string fireReason)
+        public void FireEmployee(Company company, Guid employee, string fireReason)
         {
-            if (IsEmployee(company, employee)) return;
+            if (!IsEmployee(company, employee)) return;
             _hrDepartmentService.FireEmployee(company, employee, fireReason);
             SelectedHuman = null;
             Components.HumanPicker.SelectedIndex = -1;
@@ -112,29 +112,27 @@ namespace CourseWork_2.Data.Controllers
 
         private void LoadEmployees()
         {
-            if (SelectedCompany != null)
+            if (SelectedCompany == null) return;
+            var employees = SelectedCompany.EmployeeUUIDs.Select((id, index) =>
             {
-                var employees = SelectedCompany.EmployeeUUIDs.Select((id, index) =>
+                var employee = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{id.ToString()}");
+                return new
                 {
-                    var employee = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{id.ToString()}");
-                    return new
-                    {
-                        Number = index + 1,
-                        Name = employee?.UserDefaultCredentials.FirstName + " " +
-                               employee?.UserDefaultCredentials.LastName,
-                        Position = employee?.LastEmploymentHistoryRecord?.PositionAtWork,
-                        Id = id
-                    };
-                }).ToList();
-                Components.EmployeesCollectionView.ItemsSource = employees;
-            }
+                    Number = index + 1,
+                    Name = employee?.UserDefaultCredentials.FirstName + " " +
+                           employee?.UserDefaultCredentials.LastName,
+                    Position = employee?.LastEmploymentHistoryRecord?.PositionAtWork,
+                    Id = id
+                };
+            }).ToList();
+            Components.EmployeesCollectionView.ItemsSource = employees;
         }
 
         private void UpdateInviteButtonVisibility()
         {
-            bool isVisible = SelectedHuman != null &&
-                             SelectedCompany != null &&
-                             !IsEmployee(SelectedCompany, SelectedHuman.Uuid);
+            var isVisible = SelectedHuman != null &&
+                            SelectedCompany != null &&
+                            !IsEmployee(SelectedCompany, SelectedHuman.Uuid);
 
             Components.InviteButton.IsVisible = isVisible;
             Components.PositionEntry.IsVisible = isVisible;
@@ -170,19 +168,10 @@ namespace CourseWork_2.Data.Controllers
         public bool OnViewClicked(object sender)
         {
             var button = sender as Button;
-            if (button?.CommandParameter is Guid employeeUuid)
-            {
-                SelectedHuman = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid.ToString()}");
+            if (button?.CommandParameter is not Guid employeeUuid) return false;
+            SelectedHuman = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid.ToString()}");
 
-                if (SelectedHuman == null)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-
-            return false;
+            return SelectedHuman != null;
         }
 
         public void InitComponents(Picker companyPicker, Picker humanPicker, Button inviteButton, Entry positionEntry,
@@ -200,16 +189,19 @@ namespace CourseWork_2.Data.Controllers
                 InviteButton = inviteButton
             };
         }
+        
+        public class PageComponents
+        {
+            public required Picker CompanyPicker { get; init; }
+            public required Picker HumanPicker { get; init; }
+            public required Button InviteButton { get; init; }
+            public required Entry PositionEntry { get; init; }
+            public required CollectionView EmployeesCollectionView { get; init; }
+            public required Frame TableFrame { get; init; }
+            public required Label CompanyEmployeesLabel { get; init; }
+        }
     }
+    
 
-    public class PageComponents
-    {
-        public required Picker CompanyPicker { get; init; }
-        public required Picker HumanPicker { get; init; }
-        public required Button InviteButton { get; init; }
-        public required Entry PositionEntry { get; init; }
-        public required CollectionView EmployeesCollectionView { get; init; }
-        public required Frame TableFrame { get; init; }
-        public required Label CompanyEmployeesLabel { get; init; }
-    }
+   
 }

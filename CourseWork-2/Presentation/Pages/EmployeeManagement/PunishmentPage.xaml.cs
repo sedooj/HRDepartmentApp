@@ -15,31 +15,6 @@ public partial class PunishmentPage
         _controller = controller;
     }
 
-    private async void OnPunishmentTypeChanged(object sender, EventArgs e)
-    {
-        if (PunishmentTypePicker.SelectedIndex != -1)
-        {
-            var selectedType = (Punishment.PunishmentType)PunishmentTypePicker.SelectedIndex;
-            if (selectedType == Punishment.PunishmentType.Demotion)
-            {
-                ReasonLabel.IsVisible = false;
-            }
-            else
-            {
-                string reason = await DisplayPromptAsync("Причина", "Введите причину:");
-                if (!string.IsNullOrEmpty(reason))
-                {
-                    ReasonLabel.Text = $"Причина: {reason}";
-                    ReasonLabel.IsVisible = true;
-                }
-                else
-                {
-                    ReasonLabel.IsVisible = false;
-                }
-            }
-        }
-    }
-
     private async void OnSaveClicked(object sender, EventArgs e)
     {
         try
@@ -52,6 +27,8 @@ public partial class PunishmentPage
 
             var selectedType = (Punishment.PunishmentType)PunishmentTypePicker.SelectedIndex;
 
+            string reason = await DisplayPromptAsync("Причина", "Введите причину:");
+            
             if (selectedType == Punishment.PunishmentType.Demotion)
             {
                 string newPosition = await DisplayPromptAsync("Новая должность", "Введите новую должность:");
@@ -60,29 +37,10 @@ public partial class PunishmentPage
                     await DisplayAlert("Ошибка", "Введите новую должность", "OK");
                     return;
                 }
-
-                string reason = await DisplayPromptAsync("Причина", "Введите причину:");
-                if (string.IsNullOrEmpty(reason))
-                {
-                    await DisplayAlert("Ошибка", "Введите причину", "OK");
-                    return;
-                }
-
                 _controller.DemoteEmployee(_controller.SelectedHuman!.Uuid, newPosition, reason);
             }
-            else
-            {
-                string reason = ReasonLabel.Text.Replace("Причина: ", "");
-                if (string.IsNullOrEmpty(reason))
-                {
-                    await DisplayAlert("Ошибка", "Введите причину", "OK");
-                    return;
-                }
-
-                var punishment = new Punishment(id: Guid.NewGuid(), selectedType, date: DateTime.Now, reason: reason);
-                _controller.PunishEmployee(_controller.SelectedHuman!, punishment);
-            }
-
+            var punishment = new Punishment(id: Guid.NewGuid(), selectedType, date: DateTime.Now, reason: reason);
+            _controller.PunishEmployee(_controller.SelectedHuman!, punishment);
             await Navigation.PopAsync();
         }
         catch (Exception ex)
