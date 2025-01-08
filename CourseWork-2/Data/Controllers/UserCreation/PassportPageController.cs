@@ -1,6 +1,6 @@
 using CourseWork_2.Presentation.Util;
 
-namespace CourseWork_2.Data.ViewControllers;
+namespace CourseWork_2.Data.Controllers.UserCreation;
 
 public class PassportController
 {

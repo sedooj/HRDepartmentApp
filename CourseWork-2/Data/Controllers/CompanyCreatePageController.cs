@@ -4,9 +4,9 @@ using CourseWork_2.Domain.Models;
 using CourseWork_2.Domain.Service;
 using CourseWork_2.Presentation.Util;
 
-namespace CourseWork_2.Data.ViewModels;
+namespace CourseWork_2.Data.Controllers;
 
-public class CompanyCreatePageViewModel
+public class CompanyCreatePageController
 {
 
     private readonly IStorage<Company> _companyService = new LocalStorageService<Company> ();
@@ -35,8 +35,8 @@ public class CompanyCreatePageViewModel
                 DisplayAlert("Validation Error", "Some fields are filled incorrectly.", "OK");
                 return;
             }
-            var company = new Company(Guid.NewGuid().ToString(), name, address, phone, new List<string>());
-            _companyService.SaveEntity($"{Config.CompanyStoragePath}{company.Id}", company);
+            var company = new Company(Guid.NewGuid(), name, address, phone, new List<Guid>());
+            _companyService.SaveEntity($"{Config.CompanyStoragePath}{company.Id.ToString()}", company);
             Debug.WriteLine("Company entity created successfully.");
         }
         catch (Exception ex)

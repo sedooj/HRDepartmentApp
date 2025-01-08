@@ -4,8 +4,8 @@ namespace CourseWork_2.Domain.Service;
 
 public interface IHrDepartment
 {
-    void InviteEmployee(Company company, string humanUuid, string position);
+    void InviteEmployee(Company company, Guid humanUuid, string position);
 
-    void FireEmployee(Company company, string humanUuid, string fireReason);
+    void FireEmployee(Company company, Guid humanUuid, string fireReason);
     List<EmploymentHistoryRecord> GetEmployeeWorkbook(Human human);
 }

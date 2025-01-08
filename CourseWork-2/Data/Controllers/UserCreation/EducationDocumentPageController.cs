@@ -1,9 +1,9 @@
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Presentation.Util;
 
-namespace CourseWork_2.Data.ViewModels.UserCreation;
+namespace CourseWork_2.Data.Controllers.UserCreation;
 
-public class EducationDocumentViewModel
+public class EducationDocumentPageController
 {
     private const int MaxSerialLength = 6;
     private const int MaxNumberLength = 7;

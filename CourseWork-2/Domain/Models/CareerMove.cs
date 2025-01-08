@@ -5,11 +5,11 @@ public sealed class CareerMove
     private MoveType _move;
     private string _reason;
     private DateTime _date;
-    private string _id;
+    private Guid _id;
     private string _positionFrom;
     private string _positionTo;
 
-    public CareerMove(MoveType move, string reason, DateTime date, string id, string positionFrom, string positionTo)
+    public CareerMove(MoveType move, string reason, DateTime date, Guid id, string positionFrom, string positionTo)
     {
         _move = move;
         _reason = reason;
@@ -22,7 +22,7 @@ public sealed class CareerMove
     public MoveType Move => _move;
     public string Reason => _reason;
     public DateTime Date => _date;
-    public string Id => _id;
+    public Guid Id => _id;
     public string PositionFrom => _positionFrom;
     public string PositionTo => _positionTo;
 

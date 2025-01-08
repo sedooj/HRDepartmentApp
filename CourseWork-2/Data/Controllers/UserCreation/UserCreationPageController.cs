@@ -1,11 +1,14 @@
 using CourseWork_2.Data.Service;
 using CourseWork_2.Domain.Models;
+using CourseWork_2.Domain.Service;
 using CourseWork_2.Presentation.Util;
 
-namespace CourseWork_2.Data.ViewModels.UserCreation
+namespace CourseWork_2.Data.Controllers.UserCreation
 {
-    public class UserCreationViewModel
+    public class UserCreationPageController
     {
+
+        private readonly IStorage<Human> _humanService = new LocalStorageService<Human>();
         public HumanDataHolder HumanData { get; set; } = new();
 
         private bool ValidateHuman()
@@ -27,32 +30,32 @@ namespace CourseWork_2.Data.ViewModels.UserCreation
                     HumanData.EducationDocument == null) return false;
 
                 Human human = new Human(
-                    Guid.NewGuid().ToString(),
+                    Guid.NewGuid(),
                     HumanData.Passport,
                     HumanData.UserDefaultCredentials,
                     new List<EmploymentHistoryRecord>(),
                     new Education(
-                        0,
+                        Guid.NewGuid(),
                         HumanData.EducationDocument.Institution,
                         HumanData.EducationDocument.GraduatedDate,
                         HumanData.EducationDocument.Specialty
                     ),
                     HumanData.EducationDocument
                 );
-
-                string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string directoryPath = Path.Combine(documentsPath, "humans");
-
-                if (!Directory.Exists(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-
-                string filePath = Path.Combine(directoryPath, $"{human.Uuid}.json");
-                string json = new JsonObjectSerializer().Serialize(human);
-                File.WriteAllText(filePath, json);
-
-                Console.WriteLine("Human entity created and saved successfully.");
+                _humanService.SaveEntity($"{Config.HumanStoragePath}{human.Uuid.ToString()}", human);
+                // string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                // string directoryPath = Path.Combine(documentsPath, "humans");
+                //
+                // if (!Directory.Exists(directoryPath))
+                // {
+                //     Directory.CreateDirectory(directoryPath);
+                // }
+                //
+                // string filePath = Path.Combine(directoryPath, $"{human.Uuid.ToString()}.json");
+                // string json = new JsonObjectSerializer().Serialize(human);
+                // File.WriteAllText(filePath, json);
+                //
+                // Console.WriteLine("Human entity created and saved successfully.");
                 return true;
             }
             catch (Exception ex)

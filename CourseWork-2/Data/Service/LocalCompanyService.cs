@@ -9,9 +9,9 @@ namespace CourseWork_2.Data.Service
     {
         private readonly IStorage<Human> _humanService = new LocalStorageService<Human>();
 
-        public bool RewardEmployee(string employeeUuid, Reward reward)
+        public bool RewardEmployee(Guid employeeUuid, Reward reward)
         {
-            var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
+            var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid.ToString()}");
             if (employee == null)
             {
                 Debug.WriteLine("Can't give reward to employee: employee not found");
@@ -23,9 +23,9 @@ namespace CourseWork_2.Data.Service
             return true;
         }
 
-        public bool PunishEmployee(string humanUuid, Punishment punishment)
+        public bool PunishEmployee(Guid humanUuid, Punishment punishment)
         {
-            var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{humanUuid}");
+            var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{humanUuid.ToString()}");
             if (employee == null)
             {
                 Debug.WriteLine("Can't punish employee: employee not found");
@@ -36,9 +36,9 @@ namespace CourseWork_2.Data.Service
             return true;
         }
 
-        public bool PromoteEmployee(string employeeUuid, string newPosition, string reason)
+        public bool PromoteEmployee(Guid employeeUuid, string newPosition, string reason)
         {
-            var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
+            var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid.ToString()}");
             if (employee == null)
             {
                 Debug.WriteLine("Can't promote employee: employee not found");
@@ -46,7 +46,7 @@ namespace CourseWork_2.Data.Service
             }
             var careerMoves = new List<CareerMove>(employee.EmploymentHistoryRecords.Last().CareerMoves)
             {
-                new(CareerMove.MoveType.Promotion, reason, DateTime.Now, Guid.NewGuid().ToString(),
+                new(CareerMove.MoveType.Promotion, reason, DateTime.Now, Guid.NewGuid(),
                     employee.EmploymentHistoryRecords.Last().PositionAtWork, newPosition)
             };
             employee.EmploymentHistoryRecords.Last().CareerMoves = careerMoves;
@@ -56,19 +56,19 @@ namespace CourseWork_2.Data.Service
             return true;
         }
         
-        public bool DemoteEmployee(string employeeUuid, string newPosition, string reason)
+        public bool DemoteEmployee(Guid employeeUuid, string newPosition, string reason)
         {
-            var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
+            var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid.ToString()}");
             if (employee == null)
             {
                 Debug.WriteLine("Can't demote employee: employee not found");
                 return false;
             }
             
-            var punishment = new Punishment(id: Guid.NewGuid().ToString(), Punishment.PunishmentType.Demotion, DateTime.Now, reason);
+            var punishment = new Punishment(id: Guid.NewGuid(), Punishment.PunishmentType.Demotion, DateTime.Now, reason);
             var careerMoves = new List<CareerMove>(employee.EmploymentHistoryRecords.Last().CareerMoves)
             {
-                new(CareerMove.MoveType.Demotion, reason, DateTime.Now, Guid.NewGuid().ToString(),
+                new(CareerMove.MoveType.Demotion, reason, DateTime.Now, Guid.NewGuid(),
                     employee.EmploymentHistoryRecords.Last().PositionAtWork, newPosition)
             };
             employee.EmploymentHistoryRecords.Last().CareerMoves = careerMoves;
