@@ -2,13 +2,13 @@ namespace CourseWork_2.Domain.Models
 {
     public class Company
     {
-        private string _id;
+        private Guid _id;
         private string _name;
         private string _address;
         private string _phone;
-        private List<string> _employeeUUIDs;
+        private List<Guid> _employeeUUIDs;
 
-        public Company(string id, string name, string address, string phone, List<string> employeeUUIDs)
+        public Company(Guid id, string name, string address, string phone, List<Guid> employeeUUIDs)
         {
             _id = id;
             _name = name;
@@ -17,7 +17,7 @@ namespace CourseWork_2.Domain.Models
             _employeeUUIDs = employeeUUIDs;
         }
 
-        public string Id
+        public Guid Id
         {
             get => _id;
             set => _id = value;
@@ -41,7 +41,7 @@ namespace CourseWork_2.Domain.Models
             set => _phone = value;
         }
 
-        public List<string> EmployeeUUIDs
+        public List<Guid> EmployeeUUIDs
         {
             get => _employeeUUIDs;
             set => _employeeUUIDs = value;

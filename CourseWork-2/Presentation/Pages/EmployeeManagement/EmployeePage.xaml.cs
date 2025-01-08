@@ -1,27 +1,31 @@
 using System.Diagnostics;
-using CourseWork_2.Data.ViewModels;
+using CourseWork_2.Data.Controllers;
 using CourseWork_2.Presentation.Util;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
     public partial class EmployeePage
     {
-        private readonly EmployeeManagementPageViewModel _controller;
+        private readonly EmployeeManagementPageController _controller;
 
-        public EmployeePage(EmployeeManagementPageViewModel controller)
+        public EmployeePage(EmployeeManagementPageController controller)
         {
-            _controller = controller;
             InitializeComponent();
+            _controller = controller;
+            Init();
+        }
 
+        private void Init()
+        {
             Title = "Сотрудник: " + _controller.SelectedHuman?.UserDefaultCredentials.FirstName + " " +
-                    _controller.SelectedHuman?.UserDefaultCredentials.LastName + " - " + _controller.SelectedHuman?.EmploymentHistoryRecords.Last().PositionAtWork! ;
+                    _controller.SelectedHuman?.UserDefaultCredentials.LastName + " - " + _controller.SelectedHuman?.LastEmploymentHistoryRecord.PositionAtWork! ;
             
             EmployeeName = _controller.SelectedHuman?.UserDefaultCredentials.FirstName + " " +
                            _controller.SelectedHuman?.UserDefaultCredentials.LastName + " " +
                            _controller.SelectedHuman?.UserDefaultCredentials.SecondName;
             EmployeeNameLabel.TextColor = EntryUtil.GetInvertedColor(null);
 
-            EmployeePosition = _controller.SelectedHuman?.EmploymentHistoryRecords.Last().PositionAtWork!;
+            EmployeePosition = _controller.SelectedHuman?.LastEmploymentHistoryRecord.PositionAtWork!;
             EmployeePositionLabel.TextColor = EntryUtil.GetInvertedColor(null);
             
             BindingContext = this;

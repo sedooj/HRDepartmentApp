@@ -1,10 +1,10 @@
-using CourseWork_2.Data.ViewModels.UserCreation;
+using CourseWork_2.Data.Controllers.UserCreation;
 
 namespace CourseWork_2.Presentation.Pages.UserCreate;
 
 public partial class UserCreationPage
 {
-    private readonly UserCreationViewModel _model = new();
+    private readonly UserCreationPageController _model = new();
 
     public UserCreationPage()
     {

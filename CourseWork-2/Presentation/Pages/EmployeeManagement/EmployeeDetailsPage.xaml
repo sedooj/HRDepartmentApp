@@ -14,7 +14,7 @@
             <Label Text="{Binding PositionAtWork, Converter={StaticResource EmptyFieldConverter}, StringFormat='Должность: {0}'}" FontSize="Medium" />
             <Label Text="{Binding WorkingStartDate, StringFormat='Дата начала работы: {0:dd.MM.yyyy}', Converter={StaticResource EmptyFieldConverter}}" FontSize="Medium" />
             <Label Text="{Binding WorkingEndDate, StringFormat='Дата окончания работы: {0:dd.MM.yyyy}', Converter={StaticResource EmptyFieldConverter}}" FontSize="Medium" />
-            <Label Text="{Binding CompanyUuid, Converter={StaticResource EmptyFieldConverter}, StringFormat='Компания: {0}'}" FontSize="Medium" />
+            <Label Text="{Binding CompanyName, Converter={StaticResource EmptyFieldConverter}, StringFormat='Компания: {0}'}" FontSize="Medium" />
             <Label Text="{Binding FireReason, Converter={StaticResource EmptyFieldConverter}, StringFormat='Причина увольнения: {0}'}" FontSize="Medium" />
             <Label Text="{Binding Degree, Converter={StaticResource EnumTextConverter}, StringFormat='Ученая степень: {0}'}" FontSize="Medium" />
             <Label Text="{Binding Rank, Converter={StaticResource EnumTextConverter}, StringFormat='Ученое звание: {0}'}" FontSize="Medium" />

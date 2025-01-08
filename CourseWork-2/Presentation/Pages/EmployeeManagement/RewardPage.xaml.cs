@@ -1,14 +1,14 @@
 using System.Diagnostics;
+using CourseWork_2.Data.Controllers;
 using CourseWork_2.Domain.Models;
-using CourseWork_2.Data.ViewModels;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
     public partial class RewardPage
     {
-        private readonly EmployeeManagementPageViewModel _controller;
+        private readonly EmployeeManagementPageController _controller;
 
-        public RewardPage(EmployeeManagementPageViewModel controller)
+        public RewardPage(EmployeeManagementPageController controller)
         {
             InitializeComponent();
             _controller = controller;

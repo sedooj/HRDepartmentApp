@@ -8,7 +8,7 @@ public sealed class EducationDocument : Education
     private string _direction;
     private DateTime _dateOfIssue;
 
-    public EducationDocument(long documentId, string institution, DateTime graduatedDate, string specialty, string serial, string number, EducationLevels level, string direction, DateTime dateOfIssue)
+    public EducationDocument(Guid documentId, string institution, DateTime graduatedDate, string specialty, string serial, string number, EducationLevels level, string direction, DateTime dateOfIssue)
         : base(documentId, institution, graduatedDate, specialty)
     {
         _serial = serial;

@@ -2,9 +2,9 @@ using CourseWork_2.Data.Service;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Domain.Service;
 
-namespace CourseWork_2.Data.ViewModels
+namespace CourseWork_2.Data.Controllers
 {
-    public class EmployeeManagementPageViewModel
+    public class EmployeeManagementPageController
     {
         private readonly IStorage<Company> _companyStorageService = new LocalStorageService<Company>();
         private readonly IStorage<Human> _humanStorageService = new LocalStorageService<Human>();
@@ -51,7 +51,7 @@ namespace CourseWork_2.Data.ViewModels
             Humans = _humanStorageService.LoadEntities(humanDirectoryPath).ToList();
         }
 
-        public bool IsEmployee(Company company, string humanUuid)
+        public bool IsEmployee(Company company, Guid humanUuid)
         {
             return company.EmployeeUUIDs.Contains(humanUuid);
         }
@@ -65,20 +65,20 @@ namespace CourseWork_2.Data.ViewModels
             }
         }
 
-        public void PromoteEmployee(string employeeUuid, string newPosition, string reason)
+        public void PromoteEmployee(Guid employeeUuid, string newPosition, string reason)
         {
             var promotion = _companyService.PromoteEmployee(employeeUuid, newPosition, reason);
             if (promotion) GiveReward(SelectedHuman!, new Reward(id: Guid.NewGuid().ToString(), Reward.RewardType.Promotion, DateTime.Now, reason));
             LoadData();
         }
         
-        public void DemoteEmployee(string employeeUuid, string newPosition, string reason)
+        public void DemoteEmployee(Guid employeeUuid, string newPosition, string reason)
         {
             _companyService.DemoteEmployee(employeeUuid, newPosition, reason);
             LoadData();
         }
 
-        public void FireEmployee(Company company, string employee, string fireReason)
+        public void FireEmployee(Company company, Guid employee, string fireReason)
         {
             if (!IsEmployee(company, employee)) return;
             _hrDepartmentService.FireEmployee(company, employee, fireReason);

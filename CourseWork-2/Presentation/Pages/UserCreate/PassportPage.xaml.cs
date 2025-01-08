@@ -1,5 +1,4 @@
-using CourseWork_2.Data.ViewControllers;
-using CourseWork_2.Data.ViewModels.UserCreation;
+using CourseWork_2.Data.Controllers.UserCreation;
 using CourseWork_2.Domain.Models;
 using CourseWork_2.Presentation.Util;
 
@@ -8,12 +7,17 @@ namespace CourseWork_2.Presentation.Pages.UserCreate;
 public partial class PassportPage
 {
     private readonly PassportController _controller = new();
-    private readonly UserCreationViewModel _userCreationModel;
+    private readonly UserCreationPageController _userCreationModel;
 
-    public PassportPage(HumanDataHolder humanData, UserCreationViewModel userCreationModel)
+    public PassportPage(HumanDataHolder humanData, UserCreationPageController userCreationModel)
     {
         InitializeComponent();
         _userCreationModel = userCreationModel;
+        Init(humanData);
+    }
+
+    private void Init(HumanDataHolder humanData)
+    {
         SerialEntry.TextChanged += OnSerialEntryTextChanged;
         NumberEntry.TextChanged += OnNumberEntryTextChanged;
         

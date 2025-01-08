@@ -1,23 +1,26 @@
-using CourseWork_2.Data.ViewControllers;
 using CourseWork_2.Domain.Models;
 using System.Diagnostics;
+using CourseWork_2.Data.Controllers;
 using CourseWork_2.Data.Service;
-using CourseWork_2.Data.ViewModels;
 using CourseWork_2.Presentation.Util;
-using Microsoft.Maui.Animations;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement
 {
     public partial class EmployeeManagementPage
     {
-        private readonly EmployeeManagementPageViewModel _controller = new();
+        private readonly EmployeeManagementPageController _controller = new();
         private readonly LocalStorageService<Human> _humanStorageService = new();
 
         public EmployeeManagementPage()
         {
+            InitializeComponent();
+            InitPage();
+        }
+
+        private void InitPage()
+        {
             try
             {
-                InitializeComponent();
                 _controller.LoadData();
                 LoadData();
                 Debug.WriteLine("EmployeeManagementPage initialized successfully.");
@@ -152,13 +155,13 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
                 {
                     var employees = _controller.SelectedCompany.EmployeeUUIDs.Select((id, index) =>
                     {
-                        var employee = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{id}");
+                        var employee = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{id.ToString()}");
                         return new
                         {
                             Number = index + 1,
                             Name = employee?.UserDefaultCredentials.FirstName + " " +
                                    employee?.UserDefaultCredentials.LastName,
-                            Position = employee?.EmploymentHistoryRecords.Last().PositionAtWork,
+                            Position = employee?.LastEmploymentHistoryRecord?.PositionAtWork,
                             Id = id
                         };
                     }).ToList();
@@ -178,9 +181,9 @@ namespace CourseWork_2.Presentation.Pages.EmployeeManagement
             {
                 Debug.WriteLine("OnViewClicked started.");
                 var button = sender as Button;
-                if (button?.CommandParameter is string employeeUuid)
+                if (button?.CommandParameter is Guid employeeUuid)
                 {
-                    _controller.SelectedHuman = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
+                    _controller.SelectedHuman = _humanStorageService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid.ToString()}");
 
                     if (_controller.SelectedHuman == null)
                     {

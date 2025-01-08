@@ -1,16 +1,15 @@
 using CourseWork_2.Domain.Models;
-using CourseWork_2.Data.ViewControllers;
 using System;
 using System.Diagnostics;
-using CourseWork_2.Data.ViewModels;
+using CourseWork_2.Data.Controllers;
 
 namespace CourseWork_2.Presentation.Pages.EmployeeManagement;
 
 public partial class PunishmentPage
 {
-    private readonly EmployeeManagementPageViewModel _controller;
+    private readonly EmployeeManagementPageController _controller;
 
-    public PunishmentPage(EmployeeManagementPageViewModel controller)
+    public PunishmentPage(EmployeeManagementPageController controller)
     {
         InitializeComponent();
         _controller = controller;
@@ -80,7 +79,7 @@ public partial class PunishmentPage
                     return;
                 }
 
-                var punishment = new Punishment(id: Guid.NewGuid().ToString(), selectedType, date: DateTime.Now, reason: reason);
+                var punishment = new Punishment(id: Guid.NewGuid(), selectedType, date: DateTime.Now, reason: reason);
                 _controller.PunishEmployee(_controller.SelectedHuman!, punishment);
             }
 

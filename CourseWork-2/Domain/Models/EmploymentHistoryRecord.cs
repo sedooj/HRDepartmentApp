@@ -6,7 +6,8 @@ public class EmploymentHistoryRecord
     private AcademicRank _rank;
     private DateTime _workingStartDate;
     private DateTime? _workingEndDate;
-    private string _companyUuid;
+    private Guid _companyId;
+    private string _companyName;
     private string _startEmploymentPosition;
     private string _positionAtWork;
     private string _fireReason;
@@ -15,14 +16,15 @@ public class EmploymentHistoryRecord
     private List<Reward> _rewards;
 
     public EmploymentHistoryRecord(AcademicDegree degree, AcademicRank rank, DateTime workingStartDate,
-        DateTime? workingEndDate, string companyUuid, string startEmploymentPosition, string positionAtWork,
+        DateTime? workingEndDate, Guid companyId, string companyName, string startEmploymentPosition, string positionAtWork,
         string fireReason, List<CareerMove> careerMoves, List<Punishment> punishments, List<Reward> rewards)
     {
         _degree = degree;
         _rank = rank;
         _workingStartDate = workingStartDate;
         _workingEndDate = workingEndDate;
-        _companyUuid = companyUuid;
+        _companyId = companyId;
+        _companyName = companyName;
         _startEmploymentPosition = startEmploymentPosition;
         _positionAtWork = positionAtWork;
         _fireReason = fireReason;
@@ -31,6 +33,11 @@ public class EmploymentHistoryRecord
         _rewards = rewards;
     }
 
+    public string CompanyName
+    {
+        get => _companyName;
+        set => _companyName = value;
+    }
     public AcademicDegree Degree
     {
         get => _degree;
@@ -55,10 +62,10 @@ public class EmploymentHistoryRecord
         set => _workingEndDate = value;
     }
 
-    public string CompanyUuid
+    public Guid CompanyId
     {
-        get => _companyUuid;
-        set => _companyUuid = value;
+        get => _companyId;
+        set => _companyId = value;
     }
 
     public string StartEmploymentPosition
