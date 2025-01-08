@@ -36,7 +36,7 @@ namespace CourseWork_2.Data.Service
             return true;
         }
 
-        public bool PromoteEmployee(string employeeUuid, string newPosition)
+        public bool PromoteEmployee(string employeeUuid, string newPosition, string reason)
         {
             var employee = _humanService.LoadEntity($"{Config.HumanStoragePath}{employeeUuid}");
             if (employee == null)
@@ -44,6 +44,12 @@ namespace CourseWork_2.Data.Service
                 Debug.WriteLine("Can't promote employee: employee not found");
                 return false;
             }
+            var careerMoves = new List<CareerMove>(employee.EmploymentHistoryRecords.Last().CareerMoves)
+            {
+                new(CareerMove.MoveType.Promotion, reason, DateTime.Now, Guid.NewGuid().ToString(),
+                    employee.EmploymentHistoryRecords.Last().PositionAtWork, newPosition)
+            };
+            employee.EmploymentHistoryRecords.Last().CareerMoves = careerMoves;
             employee.EmploymentHistoryRecords.Last().PositionAtWork = newPosition;
             _humanService.UpdateEntity($"{Config.HumanStoragePath}{employee.Uuid}", employee);
             Debug.WriteLine("Promotion success");
@@ -58,8 +64,14 @@ namespace CourseWork_2.Data.Service
                 Debug.WriteLine("Can't demote employee: employee not found");
                 return false;
             }
-
-            var punishment = new Punishment(Punishment.PunishmentType.Demotion, DateTime.Now, reason);
+            
+            var punishment = new Punishment(id: Guid.NewGuid().ToString(), Punishment.PunishmentType.Demotion, DateTime.Now, reason);
+            var careerMoves = new List<CareerMove>(employee.EmploymentHistoryRecords.Last().CareerMoves)
+            {
+                new(CareerMove.MoveType.Demotion, reason, DateTime.Now, Guid.NewGuid().ToString(),
+                    employee.EmploymentHistoryRecords.Last().PositionAtWork, newPosition)
+            };
+            employee.EmploymentHistoryRecords.Last().CareerMoves = careerMoves;
             employee.EmploymentHistoryRecords.Last().Punishments.Add(punishment);
             employee.EmploymentHistoryRecords.Last().PositionAtWork = newPosition;
             _humanService.SaveEntity($"{Config.HumanStoragePath}{employee.Uuid}", employee);

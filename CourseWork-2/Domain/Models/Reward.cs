@@ -5,7 +5,13 @@ public sealed class Reward
     private string _id;
     private DateTime _date;
     private RewardType _type;
+    private string _reason;
     
+    public string Reason
+    {
+        get => _reason;
+        set => _reason = value;
+    }
     public string Id
     {
         get => _id;
@@ -24,11 +30,12 @@ public sealed class Reward
         set => _type = value;
     }
 
-    public Reward(string id, RewardType type, DateTime date)
+    public Reward(string id, RewardType type, DateTime date, string reason)
     {
         _id = id;
         _type = type;
         _date = date;
+        _reason = reason;
     }
 
     public enum RewardType

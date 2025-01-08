@@ -31,7 +31,8 @@ public class HrDepartmentService : IHrDepartment
             fireReason: "",
             positionAtWork: position,
             rewards: new List<Reward>(),
-            careerMoves: new List<CareerMove>(),
+            careerMoves: new List<CareerMove>{new(CareerMove.MoveType.Invite, "Устройство на работу", DateTime.Now, Guid.NewGuid().ToString(),
+                "", position)},
             startEmploymentPosition: position,
             punishments: new List<Punishment>()));
         human.EmploymentHistoryRecords = employmentHistory;
@@ -50,6 +51,11 @@ public class HrDepartmentService : IHrDepartment
         }
         human.EmploymentHistoryRecords.Last().WorkingEndDate = DateTime.Now;
         human.EmploymentHistoryRecords.Last().FireReason = fireReason;
+        human.EmploymentHistoryRecords.Last().CareerMoves = new List<CareerMove>(human.EmploymentHistoryRecords.Last().CareerMoves)
+        {
+            new(CareerMove.MoveType.Invite, fireReason, DateTime.Now, Guid.NewGuid().ToString(),
+                human.EmploymentHistoryRecords.Last().PositionAtWork, "")
+        };
         _humanStorageService.UpdateEntity($"{Config.HumanStoragePath}{humanUuid}", human);
     }
 
